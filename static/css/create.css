@@ -1,0 +1,64 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+.form-container {
+    margin-top: 100px;
+    margin-bottom: 100px;
+    border: 1px solid black;
+    padding: 20px 40px;
+    width: 550px;
+}
+.form-container h1{
+    font-family: monospace;
+    font-size: 36px;
+    text-align: center;
+}
+.form-box {
+    display: grid;
+    place-items: center;
+    margin: 40px 0;
+    row-gap: 20px;
+}
+
+.form-input {
+    width: 100%;
+    height: 40px;
+}
+input[type="text"]{
+    font-family: monospace;
+    font-size: 24px;
+}
+#campaign-description {
+    height: 200px;
+    font-size: 24px;
+}
+.campaign-select {
+    width: 100%;
+    height: 40px;
+    font-size: 24px;
+    font-family: monospace;
+}
+.submit-button {
+    width: 100%;
+    height: 40px;
+    font-size: 24px;
+    font-family: monospace;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+.form-title {
+    font-size: 24px;
+    font-family: monospace;
+    font-weight: bold;
+
+}
