@@ -24,6 +24,7 @@
         }
         .form-container {
             margin-top: 100px;
+            margin-bottom: 100px;
             border: 1px solid black;
             padding: 20px 40px;
             width: 550px;
@@ -63,7 +64,7 @@
             height: 40px;
             font-size: 24px;
             font-family: monospace;
-            background-color: #007bff;
+            background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
@@ -96,17 +97,7 @@
 </head>
 <body>
 
-    <div class="container">
-        <nav>
-            <a href="/">Home</a>
-            <a href="/about">About</a>
-            <a href="/contact">Contact</a>
-            <a href="/create">Create New Campaign</a>
-        </nav>
-
-        <h1>Create New Campaign</h1>
-        <p>This is the Campaign Creation page.</p>
-    </div>
+    {% include 'header.html' %}
 
     <div class="form-container">
         <h1>Create New Campaign</h1>
@@ -398,6 +389,8 @@
             </div>
         </form>
     </div>
+
+    {% include 'footer.html' %}
 
 </body>
 </html>
