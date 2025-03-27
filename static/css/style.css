@@ -1,0 +1,635 @@
+/* Universally applies box-sizing to all of the elements to ensures padding and borders are included in width calculations */
+   * {
+    box-sizing: border-box;
+}
+
+/* Sets background color for the body and prevents horizontal scrolling */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #feffea;
+    width: 100%;
+    overflow-x: hidden; /* Prevents horizontal scrollbar */
+}
+
+/* Container that centers the content and sets the maximum width */
+.main-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Header styling with full width */
+header {
+    background-color: #2eb872; 
+    padding: 10px 20px;
+    color: white;
+    width: 100%;
+}
+
+/* Navigation bar using flexbox for the layout so it pushes items to opposite ends */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Left side of navigation that contains the logo and other main links */
+.nav-left {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Removes the default list styling and adds a wrap capability */
+.nav-links {
+    display: flex;
+    padding: 0;
+    margin: 0 0 0 15px;
+    list-style: none;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* Adjust the spacing between the navigation list items */
+.nav-links li {
+    padding: 0 15px;
+}
+
+/* Button styling for the navigation links adds a border, background color, and transition effects */
+.nav-links a, .buttons a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    border: 2px solid white;
+    transition: background-color 0.3s, color 0.3s;
+    display: inline-block;
+    margin: 5px 0;
+}
+
+/* Adds a inverse color effect when the user is hovering over the navigation links */
+.nav-links a:hover, .buttons a:hover {
+    background-color: white;
+    color: #4CAF50;
+}
+
+/* Adds the Login button styling */
+.buttons a {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Specific class for login button to override certain styles */
+.btn-login {
+    background: none;
+}
+
+/* Home button and logo link styling */
+.home-button {
+    display: flex;
+    align-items: center;
+    border: none;
+    outline: none;
+    text-decoration: none;
+    background: none;
+    margin-right: 15px;
+}
+
+/* Slight opacity change when user hovers */
+.home-button:hover, .home-button:focus {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+/* Campaign section container styles */
+.campaign-section {
+    padding: 20px 0;
+    background-color: #feffea;
+    position: relative;
+    width: 100%;
+}
+
+/* Section heading styles */
+.campaign-section h2 {
+    margin-left: 20px;
+    color: #333;
+}
+
+/* Carousel container for the positioning of the arrows */
+.carousel-container {
+    position: relative;
+    margin-bottom: 30px;
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+    padding: 0 20px;
+}
+
+/* Horizontal scrolling row for campaign cards */
+.campaign-row {
+    display: flex;
+    flex-wrap: nowrap; /* Prevents wrapping */
+    overflow-x: auto; /* Enables horizontal scrolling */
+    gap: 40px;
+    padding: 20px 60px;
+    width: 100%;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; /* Improves scrolling on iOS */
+    scrollbar-width: none; /* Hides scrollbar in Firefox */
+    justify-content: space-between;
+}
+
+/* Hides the scrollbar */
+.campaign-row::-webkit-scrollbar {
+    display: none;
+}
+
+/* Navigation arrow styling for carousel uses absolute positioning to place over content in vertical centering with transform */
+.carousel-container .carousel-arrow {
+    position: absolute;
+    top: 50%; 
+    transform: translateY(-50%);
+    background-color: #ccc; 
+    color: #333;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+}
+  
+/* Increases the visibility on the hover for navigation arrows */
+.carousel-container .carousel-arrow:hover {
+    opacity: 1;
+}
+  
+/* Positions the left navigation arrow */
+.carousel-container .left-arrow {
+    left: 20px; 
+}
+  
+/* Positions the right navigation arrow */
+.carousel-container .right-arrow {
+    right: 20px;
+}
+
+/* Campaign card styling, uses column direction for vertical content arrangement */
+.campaign-card {
+    flex: 0 0 300px; /* Fixed width, no growing or shrinking */
+    min-width: 300px; /* Minimum width guarantee */
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    height: auto;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Shadow effect on card hover */
+.campaign-card:hover {
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+/* Card image styling adds full width for proportional height */
+.campaign-card img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+/* Container for campaign information text */
+.campaign-info {
+    padding: 10px;
+}
+
+/* Campaign title for font */
+.campaign-info h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+/* Organization name and amount raised text styling */
+.campaign-info span {
+    display: block;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Progress bar for tiles */
+.progress-bar {
+    background-color: #eee;
+    border-radius: 5px;
+    width: 100%;
+    height: 20px;
+    margin: 10px 0;
+}
+
+/* Progress indicator styling sets the width based on percentage */
+.progress {
+    background-color: #34a853;
+    height: 100%;
+    border-radius: 5px;
+}
+
+/* Highlight section for key statistics */
+.yellow-highlight {
+    background-color: #f5f883; 
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 18px; 
+    color: #333;
+    border-top: 2px solid #ccc; 
+    border-bottom: 2px solid #ccc;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+/* Featured topics section container */
+.featured-topics {
+    padding: 20px 0;
+    background-color: #feffea;
+    position: relative;
+    width: 100%;
+}
+
+/* Featured topics heading */
+.featured-topics h3 {
+    margin-left: 20px;
+}
+
+/* Grid layout for featured topic adds wrapping and flex to create a responsive grid */
+.topics-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+    width: 100%;
+}
+
+/* Featured topic card styling */
+.topic-card {
+    flex: 1 0 280px; /* Card can grow but not shrink, 280px base */
+    max-width: 100%;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    height: auto;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Topic card - Uses object-fit to maintain the aspect ratio */
+.topic-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+/* Container for topic text content
+   Uses flexbox to push buttons to bottom */
+.topic-info {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Topic card title styling */
+.topic-info h3 {
+    margin-top: 0;
+    color: #333;
+    margin-left: 0;
+}
+
+/* Description paragraph styling */
+.topic-info p {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    flex-grow: 1;
+}
+
+/* Call to action button styling for topic cards */
+.donate-button, .learn-more-button {
+    display: block;
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #34a853; /* Green */
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Adds blue color for secondary action button */
+.learn-more-button {
+    background-color: #4285f4; /* Blue */
+    margin-bottom: 10px;
+}
+
+/* Shadow effect on topic card hover */
+.topic-card:hover {
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); 
+}
+
+/* Footer styling with lighter brand color */
+footer {
+    background-color: #a3de83; 
+    padding: 20px 0;
+    font-family: Arial, sans-serif;
+    width: 100%;
+}
+
+/*Allows columns to wrap on smaller screens */
+.footer-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding: 0 10%;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.footer-column {
+    flex: 1 0 200px;
+    margin-bottom: 20px;
+}
+
+/* Footer column heading styling */
+.footer-column h4 {
+    margin-top: 0;
+    color: #333;
+}
+
+/* Footer list removes bullets */
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+}
+
+/* Footer link styling with vertical spacing */
+.footer-column ul li a {
+    text-decoration: none;
+    color: #666;
+    line-height: 2.5;
+    display: block;
+}
+
+/* Simple hover effect for footer links */
+.footer-column ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Large screens up to 1200px */
+@media (max-width: 1200px) {
+    /* Adjusts the padding for better spacing on smaller screens */
+    .topics-container {
+        padding: 0 20px;
+    }
+    
+    .footer-container {
+        padding: 0 5%;
+    }
+}
+
+/* Desktop-size screens (min 1200px) */
+@media (min-width: 1200px) {
+    /* Increases the spacing and card size for larger screens */
+    .campaign-row {
+        padding: 20px 80px;
+        gap: 60px;
+    }
+    
+    .campaign-card {
+        flex: 0 0 320px;
+        min-width: 320px;
+    }
+    
+    /* Adjusts the arrow positions for wider padding */
+    .carousel-container .left-arrow {
+        left: 30px;
+    }
+    
+    .carousel-container .right-arrow {
+        right: 30px;
+    }
+}
+
+/* For Tablet and small desktop up to 992px */
+@media (max-width: 992px) {
+    /* Reduces the navigation spacing */
+    .nav-links {
+        margin-left: 10px;
+    }
+    
+    .nav-links li {
+        padding: 0 5px;
+    }
+    
+    /* Centers the topic cards */
+    .topics-container {
+        justify-content: center;
+    }
+    
+    /* Makes the topic cards take up half the width minus gap */
+    .topic-card {
+        flex: 0 0 calc(50% - 20px);
+    }
+    
+    /* Reduce carousel spacing */
+    .campaign-row {
+        gap: 30px;
+        padding: 20px 50px;
+    }
+}
+
+/* Mobile landscape and tablet portrait up to 768px */
+@media (max-width: 768px) {
+    /* Stack navigation elements vertically */
+    nav {
+        flex-direction: column;
+        padding: 10px;
+    }
+    
+    .nav-left {
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+    
+    /* Centers the navigation links with wrap */
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-left: 0;
+        margin-top: 10px;
+    }
+    
+    /* adds smaller buttons for smaller screens */
+    .nav-links a, .buttons a {
+        padding: 8px 15px;
+        font-size: 15px;
+    }
+    
+    /* Centers the login button */
+    .buttons {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    
+    /* Adjusts card sizes for mobile */
+    .campaign-card {
+        flex: 0 0 250px;
+        min-width: 250px;
+    }
+    
+    /* Full width cards with maximum width limit */
+    .topic-card {
+        flex: 0 0 100%;
+        max-width: 500px;
+        margin: 0 auto 20px;
+    }
+    
+    /* Full width footer columns with centered text */
+    .footer-column {
+        flex: 0 0 100%;
+        text-align: center;
+    }
+    
+    /* Reduces the carousel spacing */
+    .campaign-row {
+        gap: 20px;
+        padding: 20px 40px;
+    }
+}
+
+/* Small phones up to 480px */
+@media (max-width: 480px) {
+    /*  Reduce button size */
+    .nav-links a, .buttons a {
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+    
+    /* Smaller logo */
+    .home-button img {
+        width: 150px;
+        height: auto;
+    }
+    
+    /* Adjusts the login button positioning */
+    .buttons {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    
+    /* Minimal carousel padding */
+    .campaign-row {
+        padding: 10px 30px;
+    }
+    
+    /* Smaller navigation arrows */
+    .carousel-container .carousel-arrow {
+        padding: 8px;
+        font-size: 1rem;
+    }
+}
+
+/* Ultra-wide screens up tp min 1600px */
+@media (min-width: 1600px) {
+    /* Adjusts the container proportions for ultra-wide */
+    nav {
+        max-width: 90%;
+        padding: 0 50px;
+    }
+
+    .carousel-container {
+        max-width: 90%;
+    }
+    
+    /* Increases spacing for ultra-wide */
+    .campaign-row {
+        padding: 20px 100px;
+        gap: 80px;
+        justify-content: space-evenly;
+    }
+    
+    /* Larger cards for ultra-wide screens */
+    .campaign-card {
+        flex: 0 0 340px;
+        min-width: 340px;
+    }
+    
+    /* Adjust arrow positions */
+    .carousel-container .left-arrow {
+        left: 40px;
+    }
+    
+    .carousel-container .right-arrow {
+        right: 40px;
+    }
+}
+
+/* Very wide screens min 2000px */
+@media (min-width: 2000px) {
+    /*  Adjustments for extremely wide screens */
+    nav {
+        max-width: 80%;
+        padding: 0 80px;
+    }
+
+    .carousel-container {
+        max-width: 95%;
+    }
+    
+    /* Maximum spacing for very wide screens */
+    .campaign-row {
+        padding: 20px 120px;
+        gap: 120px;
+    }
+    
+    /* large cards */
+    .campaign-card {
+        flex: 0 0 360px;
+        min-width: 360px;
+    }
+    
+    /* Moves arrows further out */
+    .carousel-container .left-arrow {
+        left: 50px;
+    }
+    
+    .carousel-container .right-arrow {
+        right: 50px;
+    }
+}
