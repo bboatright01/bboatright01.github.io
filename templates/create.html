@@ -8,6 +8,10 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
             margin: 0;
             padding: 0;
         }
@@ -17,6 +21,59 @@
             padding: 20px;
             background-color: white;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .form-container {
+            margin-top: 100px;
+            border: 1px solid black;
+            padding: 20px 40px;
+            width: 550px;
+        }
+        .form-container h1{
+            font-family: monospace;
+            font-size: 36px;
+            text-align: center;
+        }
+        .form-box {
+            display: grid;
+            place-items: center;
+            margin: 40px 0;
+            row-gap: 20px;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 40px;
+        }
+        input[type="text"]{
+            font-family: monospace;
+            font-size: 24px;
+        }
+        #campaign-description {
+            height: 200px;
+            font-size: 24px;
+        }
+        .campaign-select {
+            width: 100%;
+            height: 40px;
+            font-size: 24px;
+            font-family: monospace;
+        }
+        .submit-button {
+            width: 100%;
+            height: 40px;
+            font-size: 24px;
+            font-family: monospace;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .form-title {
+            font-size: 24px;
+            font-family: monospace;
+            font-weight: bold;
+
         }
         h1 {
             color: #333;
@@ -35,17 +92,6 @@
             text-decoration: underline;
         }
 
-        .no-arrow::-webkit-inner-spin-button,
-        -webkit-outer-spin-button { 
-        -webkit-appearance: none; 
-        margin: 0; 
-        }
-        
-        .no-arrow {
-        appearance: textfield;
-        -moz-appearance: textfield;
-        }
-
     </style>
 </head>
 <body>
@@ -62,21 +108,21 @@
         <p>This is the Campaign Creation page.</p>
     </div>
 
-    <h1>Create New Campaign</h1>
-
-    <div>
+    <div class="form-container">
+        <h1>Create New Campaign</h1>
         <form id="campaign-form" name="campaign-form" method="post">
-            <div>
-                <label>Campaign Name</label>
+            <div class="form-box">
+                <label class="form-title">Campaign Name</label>
                 <input type="text" required maxlength="250" class="form-input" id="campaign-name" name="campaign-name">
             </div>
-            <div>
-                <label>Funding Goal</label>
-                <input type="number" class="no-arrow" id="funding-goal" name="funding-goal" min="1">
+            <div class="form-box">
+                <label class="form-title">Funding Goal</label>
+                <input type="text" class="form-input" required maxlength="25" id="funding-goal" name="funding-goal">
             </div>
-            <div>
+            <div class="form-box">
+                <label class="form-title">Select Campaign Country</label>
                 <select class="campaign-select" id="country" name="country">
-                    <option>Select Campaign Country</option>
+                    <option></option>
                     <option>Afghanistan</option>
                     <option>Aland Islands</option>
                     <option>Albania</option>
@@ -287,7 +333,7 @@
                     <option>Solomon Islands</option>
                     <option>Somalia</option>
                     <option>South Africa</option>
-                    <option>South Georgia and the South Sandwich Islands</option>
+                    <option>South Georgia</option>
                     <option>South Korea</option>
                     <option>South Sudan</option>
                     <option>Spain</option>
@@ -331,9 +377,10 @@
                     <option>Zimbabwe</option>
                 </select>
             </div>
-            <div>
+            <div class="form-box">
+                <label class="form-title">Select Campaign Type</label>
                 <select class="campaign-select" id="campaign-type" name="campaign-type">
-                    <option>Select Campaign Type</option>
+                    <option></option>
                     <option>Clean Water</option>
                     <option>Food Security</option>
                     <option>Home Building</option>
@@ -342,11 +389,13 @@
                     <option>Public Health</option>
                 </select>
             </div>
-            <div>
-                <label>Campaign Description</label>
-                <input type="text" required maxlength="10000" class="form-input" id="campaign-name" name="campaign-name" rows="5">
+            <div class="form-box">
+                <label class="form-title">Campaign Description</label>
+                <textarea required maxlength="10000" class="form-input" id="campaign-description" name="campaign-description"></textarea>
             </div>
-            <button type="submit" class="submit-button">Post</button>
+            <div class="form-box">
+                <button type="submit" class="submit-button">Create Campaign</button>
+            </div>
         </form>
     </div>
 

@@ -14,5 +14,9 @@ def about():
 def contact():
     return render_template('contact.html')
 
+@app.route('/create')
+def create():
+    return render_template('create.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
