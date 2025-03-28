@@ -5,26 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create New Campaign</title>
     <!-- Links to the external stylesheet -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/create.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/create.css') }}"> <!-- url_for required to use style sheet with flask-->
 </head>
 <body>
 
-    {% include 'header.html' %}
+    {% include 'header.html' %} <!-- This is a jinja template that imports header.html into create.html-->
 
     <div class="form-container">
         <h1>Create New Campaign</h1>
         <form id="campaign-form" name="campaign-form" action="/create/submit" method="post">
             <div class="form-box">
-                <label class="form-title">Campaign Name</label>
+                <label class="field-descriptor">Campaign Name</label>
                 <input type="text" required maxlength="250" class="form-input" id="campaign-name" name="campaign-name">
             </div>
             <div class="form-box">
-                <label class="form-title">Funding Goal</label>
+                <label class="field-descriptor">Funding Goal</label>
                 <input type="text" class="form-input" required maxlength="25" id="funding-goal" name="funding-goal">
             </div>
             <div class="form-box">
-                <label class="form-title">Select Campaign Country</label>
-                <select class="campaign-select" id="country" name="country">
+                <label class="field-descriptor">Select Campaign Country</label>
+                <select class="campaign-select" id="country" name="country"> <!-- Is there a single country missing from this dropdown? -->
                     <option></option>
                     <option>Afghanistan</option>
                     <option>Aland Islands</option>
@@ -281,7 +281,7 @@
                 </select>
             </div>
             <div class="form-box">
-                <label class="form-title">Select Campaign Type</label>
+                <label class="field-descriptor">Select Campaign Type</label>
                 <select class="campaign-select" id="campaign-type" name="campaign-type">
                     <option></option>
                     <option>Clean Water</option>
@@ -293,7 +293,7 @@
                 </select>
             </div>
             <div class="form-box">
-                <label class="form-title">Campaign Description</label>
+                <label class="field-descriptor">Campaign Description</label>
                 <textarea required maxlength="10000" class="form-input" id="campaign-description" name="campaign-description"></textarea>
             </div>
             <div class="form-box">
@@ -302,7 +302,7 @@
         </form>
     </div>
 
-    {% include 'footer.html' %}
+    {% include 'footer.html' %} <!-- This is a jinja template that imports footer.html into create.html-->
 
 </body>
 </html>
