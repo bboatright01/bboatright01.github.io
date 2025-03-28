@@ -2,6 +2,7 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
+# List of dictionaries containing campaign information; to be replaced with database
 campaigns = [
     {
         'name': "Clean Water for Oromia",
@@ -66,11 +67,13 @@ def about():
 def contact():
     return render_template('contact.html')
 
-@app.route('/carousel')
+# Route for the carousel page; template that enables dynamic display of campaign cards that can connect to database
+@app.route('/carousel') 
 def carousel():
-    return render_template('carousel.html', campaigns=campaigns, comma_num = to_string)
+    return render_template('carousel.html', campaigns=campaigns, comma_num = to_string) # Pass the list of campaigns to the template, as well as the to_string function
 
-def to_string(num):
+# Function to convert numbers to string with commas
+def to_string(num): 
     return f'{num:,}'
 
 if __name__ == '__main__':

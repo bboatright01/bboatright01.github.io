@@ -27,10 +27,10 @@
                 <div class="campaign-card">
                     <img src="{{url_for('static', filename='images/' + campaign.image)}}" alt="{{campaign.name}}">
                     <div class="campaign-info">
-                        <h3>{{campaign.name}}</h3>
-                        <span>{{campaign.organization}}</span>
+                        <h3>{{campaign.name}}</h3> <!-- Jinja templating imports dictionary data into carousel.html -->
+                        <span>{{campaign.organization}}</span> 
                         <div class="progress-bar">
-                            <div class="progress" style="width: {{campaign.raised / campaign.goal * 100}}%;"></div>
+                            <div class="progress" style="width: {{campaign.raised / campaign.goal * 100}}%;"></div> <!-- Sets width of progress by dynamically -->
                         </div>
                         <span>${{comma_num(campaign.raised)}} raised</span>
                     </div>
@@ -41,5 +41,7 @@
             <button class="carousel-arrow right-arrow">&#8594;</button>
         </div>
     </section>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <!-- Links to the external JavaScript file -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script> 
 </body>
