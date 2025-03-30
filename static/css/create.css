@@ -1,0 +1,72 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+/* Sets margins between top and bottom of form container, some internal padding, and the width */
+.form-container {
+    margin-top: 80px;
+    margin-bottom: 80px;
+    border: 1px solid black;
+    padding: 0px 40px;
+    width: 550px;
+}
+/* Sets the font family, size, and alignment of the form title */
+.form-container h1{
+    font-family: monospace;
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 35px;
+}
+/* Sets spacing between form elements */
+.form-box {
+    display: grid;
+    place-items: center;
+    margin: 20px 0;
+    row-gap: 20px;
+}
+/* Sets the width and height of the form input fields */
+.form-input {
+    width: 100%;
+    height: 40px;
+}
+/* Sets the font family and size for the form input text */
+input[type="text"]{
+    font-family: monospace;
+    font-size: 24px;
+}
+/* Sets the height of the campaign description field and the font size */
+#campaign-description {
+    height: 200px;
+    font-size: 24px;
+}
+/* Sets the width, height, font size, and font family of the form dropdowns */
+.campaign-select {
+    width: 100%;
+    height: 40px;
+    font-size: 24px;
+    font-family: monospace;
+}
+/* Styles the form submit button */
+.submit-button {
+    width: 100%;
+    height: 40px;
+    font-size: 24px;
+    font-family: monospace;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+/* Sets the font family, size, and weight of each field descriptor */
+.field-descriptor {
+    font-size: 24px;
+    font-family: monospace;
+    font-weight: bold;
+}
