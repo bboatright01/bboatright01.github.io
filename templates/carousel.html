@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- These are the required meta tags for proper rendering and encoding -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <!-- The page title that appears in browser tab -->
+    <title>Change 4 Change</title>
+     <!-- Links to the external stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+<!-- The recent campaigns section with horizontal scrolling carousel -->
+    <section class="campaign-section">
+
+        <!-- Carousel container with navigation arrows -->
+        <div class="carousel-container">
+
+            <!-- Left navigation arrow for the carousel -->
+            <button class="carousel-arrow left-arrow">&#8592;</button>
+
+            <!-- The Horizontal scroll row of the campaign cards -->
+            <div class="campaign-row">
+                {% for campaign in campaigns %}
+                <div class="campaign-card">
+                    <img src="{{url_for('static', filename='images/' + campaign.image)}}" alt="{{campaign.name}}">
+                    <div class="campaign-info">
+                        <h3>{{campaign.name}}</h3> <!-- Jinja templating imports dictionary data into carousel.html -->
+                        <span>{{campaign.organization}}</span> 
+                        <div class="progress-bar">
+                            <div class="progress" style="width: {{campaign.raised / campaign.goal * 100}}%;"></div> <!-- Sets width of progress by dynamically -->
+                        </div>
+                        <span>${{comma_num(campaign.raised)}} raised</span>
+                    </div>
+                </div>
+                {% endfor %}
+            
+            <!-- Right navigation arrow for the carousel -->
+            <button class="carousel-arrow right-arrow">&#8594;</button>
+        </div>
+    </section>
+
+    <!-- Links to the external JavaScript file -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script> 
+</body>
