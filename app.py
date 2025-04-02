@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request
-from database import load_campaigns
+from database import load_campaigns, add_new_campaign
 app = Flask(__name__)
 
 campaigns = load_campaigns() # Load campaigns from the database
@@ -82,6 +82,7 @@ def create():
 @app.route('/create/submit', methods=['POST']) #This will fetch the data from the form
 def create_campaign():
     data = request.form
+    add_new_campaign(data)
     return jsonify(data) #This will return the data in JSON format; temporary until database is connected
 
 # Route for the carousel page; template that enables dynamic display of campaign cards that can connect to database

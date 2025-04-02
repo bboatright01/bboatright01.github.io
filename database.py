@@ -15,5 +15,15 @@ def load_campaigns():
         for row in result.all():
             campaigns.append(dict(row._mapping)) # Convert the row to a dictionary
         return campaigns
-
-print(load_campaigns()[0])
+    
+def add_new_campaign(data):
+    with engine.connect() as conn:
+        conn.execute(text("INSERT INTO campaigns (Name, Description, Country, NGO, Funding_Goal) VALUES (:Name, :Description, :Country, :NGO, :Funding_Goal)"), 
+            {
+                'Name': data['campaign-name'],
+                'Description': data['campaign-description'],
+                'Country': data['country'],
+                'NGO': "WaterWorks International",
+                'Funding_Goal': data['funding-goal']
+            })
+        conn.commit()
