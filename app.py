@@ -1,8 +1,15 @@
 from flask import Flask, render_template, jsonify, request
-
+from database import load_campaigns
 app = Flask(__name__)
 
+campaigns = load_campaigns() # Load campaigns from the database
+
+for campaign in campaigns:
+    campaign['Raised'] = 10000 # Example data for testing; to be replaced with database
+    campaign['Image'] = "Clean_Water_for_Oromia.webp" # Example data for testing; to be replaced with database
+
 # List of dictionaries containing campaign information; to be replaced with database
+"""
 campaigns = [
     {
         'name': "Clean Water for Oromia",
@@ -54,6 +61,7 @@ campaigns = [
         'image': "Indonesia_Future_Scholars.webp"
     }
 ]
+"""
 
 @app.route('/')
 def home():
