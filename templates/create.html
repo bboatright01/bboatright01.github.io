@@ -13,7 +13,7 @@
 
     <div class="form-container">
         <h1>Create New Campaign</h1>
-        <form id="campaign-form" name="campaign-form" action="/create/submit" method="post">
+        <form id="campaign-form" name="campaign-form" action="/create/submit" method="post" enctype = "multipart/form-data">
             <div class="form-box">
                 <label class="field-descriptor">Campaign Name</label>
                 <input type="text" required maxlength="250" class="form-input" id="campaign-name" name="campaign-name">
@@ -296,6 +296,7 @@
                 <label class="field-descriptor">Campaign Description</label>
                 <textarea required maxlength="10000" class="form-input" id="campaign-description" name="campaign-description"></textarea>
             </div>
+            <input type = "file" name = "file" />
             <div class="form-box">
                 <button type="submit" class="submit-button">Create Campaign</button>
             </div>

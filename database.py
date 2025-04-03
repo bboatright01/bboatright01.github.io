@@ -16,7 +16,7 @@ def load_campaigns():
             campaigns.append(dict(row._mapping)) # Convert the row to a dictionary
         return campaigns
     
-def add_new_campaign(data):
+def add_new_campaign(data, filename):
     with engine.connect() as conn:
         conn.execute(text("INSERT INTO campaigns (Name, Description, Country, NGO, Funding_Goal) VALUES (:Name, :Description, :Country, :NGO, :Funding_Goal)"), 
             {
