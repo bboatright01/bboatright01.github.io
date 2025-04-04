@@ -296,7 +296,12 @@
                 <label class="field-descriptor">Campaign Description</label>
                 <textarea required maxlength="10000" class="form-input" id="campaign-description" name="campaign-description"></textarea>
             </div>
-            <input type = "file" name = "file" />
+            <div class="form-box">
+                <label for="picture-upload" class="custom-picture-upload">
+                    <i class="picture-text"></i> Select Campaign Picture
+                </label>
+                <input id="picture-upload" type="file" name="file"/>
+            </div>
             <div class="form-box">
                 <button type="submit" class="submit-button">Create Campaign</button>
             </div>

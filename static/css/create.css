@@ -10,6 +10,7 @@ body {
 }
 /* Sets margins between top and bottom of form container, some internal padding, and the width */
 .form-container {
+    background-color: white;
     margin-top: 80px;
     margin-bottom: 80px;
     border: 1px solid black;
@@ -39,11 +40,16 @@ body {
 input[type="text"]{
     font-family: monospace;
     font-size: 24px;
+    
+    background-color: #feffea;
+    border-radius: 5px;
 }
 /* Sets the height of the campaign description field and the font size */
 #campaign-description {
     height: 200px;
     font-size: 24px;
+    background-color: #feffea;
+    border-radius: 5px;
 }
 /* Sets the width, height, font size, and font family of the form dropdowns */
 .campaign-select {
@@ -51,22 +57,43 @@ input[type="text"]{
     height: 40px;
     font-size: 24px;
     font-family: monospace;
+    background-color: #feffea;
+    border-radius: 5px;
 }
 /* Styles the form submit button */
 .submit-button {
     width: 100%;
-    height: 40px;
+    height: 65px;
     font-size: 24px;
     font-family: monospace;
     background-color: #4CAF50;
     color: white;
-    border: none;
+    border: 2px solid #ccc;
     cursor: pointer;
     font-weight: bold;
+    border-radius: 5px;
 }
 /* Sets the font family, size, and weight of each field descriptor */
 .field-descriptor {
     font-size: 24px;
     font-family: monospace;
     font-weight: bold;
+}
+/* Hides the default file input */
+input[type="file"] { 
+    display: none;
+}
+/* Styles the custom file upload button */
+.custom-picture-upload {
+    width: 100%;
+    height: 50px;
+    border: 2px solid #ccc;
+    background-color: #feffea;
+    font-size: 24px;
+    font-family: monospace;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px 6px;
+    cursor: pointer;
+    border-radius: 5px;
 }
