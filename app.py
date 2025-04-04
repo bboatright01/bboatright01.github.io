@@ -10,61 +10,6 @@ for campaign in campaigns:
     campaign['Raised'] = 10000 # Example data for testing; to be replaced with database
     campaign['Image'] = "Clean_Water_for_Oromia.webp" # Example data for testing; to be replaced with database
 
-# List of dictionaries containing campaign information; to be replaced with database
-"""
-campaigns = [
-    {
-        'name': "Clean Water for Oromia",
-        'organization': "WaterWorks International",
-        'raised': 25000,
-        'goal': 50000,
-        'image': "Clean_Water_for_Oromia.webp"
-    },
-    {
-        'name': "Bangladesh Resilient Roofs",
-        'organization': "Hope Builders",
-        'raised': 30000,
-        'goal': 50000,
-        'image': "Bangladesh_Resilient_Roofs.webp"
-    },
-    {
-        'name': "Amazon Fresh Initiative",
-        'organization': "Food For All",
-        'raised': 16000,
-        'goal': 50000,
-        'image': "Amazon_Fresh_Initiative.webp"
-    },
-    {
-        'name': "Rural Homes for Rajasthan",
-        'organization': "Hope Builders",
-        'raised': 8000,
-        'goal': 50000,
-        'image': "Rural_Homes_for_Rajasthan.webp"
-    },
-    {
-        'name': "Lamu LifeStream Project",
-        'organization': "WaterWorks International",
-        'raised': 3000,
-        'goal': 50000,
-        'image': "Lamu_LifeStream_Project.webp"
-    },
-    {
-        'name': "Salud y Esperanza",
-        'organization': "Health Horizons Clinics",
-        'raised': 20000,
-        'goal': 50000,
-        'image': "Salud_y_Esperanza.webp"
-    },
-    {
-        'name': "Indonesia Future Scholars",
-        'organization': "Education Empowerment",
-        'raised': 10000,
-        'goal': 50000,
-        'image': "Indonesia_Future_Scholars.webp"
-    }
-]
-"""
-
 @app.route('/')
 def home():
     return render_template('home.html')
