@@ -25,14 +25,14 @@
             <div class="campaign-row">
                 {% for campaign in campaigns %}
                 <div class="campaign-card">
-                    <img src="{{url_for('static', filename='images/' + campaign.image)}}" alt="{{campaign.name}}">
+                    <img src="{{url_for('static', filename='images/' + campaign.Image)}}" alt="{{campaign.Name}}">
                     <div class="campaign-info">
-                        <h3>{{campaign.name}}</h3> <!-- Jinja templating imports dictionary data into carousel.html -->
-                        <span>{{campaign.organization}}</span> 
+                        <h3>{{campaign.Name}}</h3> <!-- Jinja templating imports dictionary data into carousel.html -->
+                        <span>{{campaign.NGO}}</span> 
                         <div class="progress-bar">
-                            <div class="progress" style="width: {{campaign.raised / campaign.goal * 100}}%;"></div> <!-- Sets width of progress by dynamically -->
+                            <div class="progress" style="width: {{campaign.Raised / campaign.Funding_Goal * 100}}%;"></div> <!-- Sets width of progress by dynamically -->
                         </div>
-                        <span>${{comma_num(campaign.raised)}} raised</span>
+                        <span>${{comma_num(campaign.Raised)}} raised</span>
                     </div>
                 </div>
                 {% endfor %}
