@@ -7,14 +7,33 @@ app = Flask(__name__)
 PICTURE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 IMAGES_FOLDER = join(dirname(realpath(__file__)), 'static/images/') # Full path to the static/images directory
 
-campaigns = load_campaigns() # Load campaigns from the database
+# Check if file type is allowed
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in PICTURE_EXTENSIONS
 
-for campaign in campaigns:
-    campaign['Raised'] = 10000 # Example data for testing; to be replaced with database
-    campaign['Image'] = "default.jpg" # Example data for testing; to be replaced with database
-    for extension in PICTURE_EXTENSIONS: #Check if the image file exists in the static/images directory
-        if (isfile(IMAGES_FOLDER + str(campaign['id']) + '.' + extension)):
-            campaign['Image'] = str(campaign['id']) + '.' + extension
+# Function to rename the file with the campaign ID and original extension
+def number_file(filename, id):
+    return str(id) + '.' + filename.rsplit('.', 1)[1].lower()
+
+# Function to get the file number from the filename
+def get_file_number(filename):
+    return filename.split('.')[0]
+
+# Function to convert numbers to string with commas
+def to_string(num): 
+    return f'{num:,}'
+
+def get_campaigns():
+    campaigns = load_campaigns() # Load campaigns from the database
+
+    for campaign in campaigns:
+        campaign['Raised'] = 10000 # Example data for testing; to be replaced with database
+        campaign['Image'] = "default.jpg" # Example data for testing; to be replaced with database
+        for extension in PICTURE_EXTENSIONS: #Check if the image file exists in the static/images directory
+            if (isfile(IMAGES_FOLDER + str(campaign['id']) + '.' + extension)):
+                campaign['Image'] = str(campaign['id']) + '.' + extension
+    return campaigns
 
 @app.route('/')
 def home():
@@ -32,6 +51,7 @@ def contact():
 def create():
     return render_template('create.html')
 
+#Route for the create campaign page; this will be the form that the user fills out to create a new campaign
 @app.route('/create/submit', methods=['POST']) #This will fetch the data from the form
 def create_campaign():
     if 'file' not in request.files:
@@ -53,21 +73,7 @@ def create_campaign():
 # Route for the carousel page; template that enables dynamic display of campaign cards that can connect to database
 @app.route('/carousel') 
 def carousel():
-    return render_template('carousel.html', campaigns=campaigns, comma_num = to_string) # Pass the list of campaigns to the template, as well as the to_string function
-# Check if file type is allowed
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in PICTURE_EXTENSIONS
-# Function to rename the file with the campaign ID and original extension
-def number_file(filename, id):
-    return str(id) + '.' + filename.rsplit('.', 1)[1].lower()
-# Function to get the file number from the filename
-def get_file_number(filename):
-    return filename.split('.')[0]
-
-# Function to convert numbers to string with commas
-def to_string(num): 
-    return f'{num:,}'
+    return render_template('carousel.html', campaigns=get_campaigns(), comma_num = to_string) # Pass the list of campaigns to the template, as well as the to_string function
 
 if __name__ == '__main__':
     app.run(debug=True)
