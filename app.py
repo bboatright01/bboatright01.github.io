@@ -61,6 +61,8 @@ def create_campaign():
     if file and not allowed_file(file.filename):
         return 'File type must be of type png, jpg, jpeg, gif, or webp', 400
     data = request.form
+    if not data['funding-goal'].isdigit():
+        return 'Funding goal must be a number', 400
     new_campaign = add_new_campaign(data) # Add the new campaign to the database and return the entry
     if file:
         number_filename = number_file(file.filename, new_campaign.lastrowid)
