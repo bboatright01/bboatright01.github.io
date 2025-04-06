@@ -1,7 +1,12 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, redirect, flash, url_for
 from database import load_campaigns, add_new_campaign
 from werkzeug.utils import secure_filename
 from os.path import join, dirname, realpath, isfile
+from flask_login import LoginManager
+from donor_login import LoginForm, User, RegisterForm
+from werkzeug.security import check_password_hash, generate_password_hash
+from db_connect import get_db
+
 app = Flask(__name__)
 
 PICTURE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
@@ -34,6 +39,10 @@ def get_campaigns():
             if (isfile(IMAGES_FOLDER + str(campaign['id']) + '.' + extension)):
                 campaign['Image'] = str(campaign['id']) + '.' + extension
     return campaigns
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 @app.route('/')
 def home():
@@ -76,6 +85,31 @@ def create_campaign():
 @app.route('/carousel') 
 def carousel():
     return render_template('carousel.html', campaigns=get_campaigns(), comma_num = to_string) # Pass the list of campaigns to the template, as well as the to_string function
+
+
+@app.route('/donor-login', methods=['GET', 'POST'])
+def donor_login():
+    form = LoginForm()
+    print("Form method:", request.method)
+    print("Form errors:", form.errors)
+    if form.validate_on_submit():
+        username = form.username.data
+        password_input = form.password.data
+        conn = get_db()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM Donor_users WHERE username = %s", (username,))
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        print("Form validated!")
+        print("Username:", form.username.data)
+        if user and check_password_hash(user['password'], password_input):
+            user_obj = User(user['id'], user['username'], user['password'])
+            login_user(user_obj)
+            flash("Login successful", "success")
+            return redirect(url_for('donor_dashboard'))
+        flash("Invalid credentials", "danger")
+    return render_template('donor-login.html', form=form)
 
 if __name__ == '__main__':
     app.run(debug=True)
