@@ -6,8 +6,11 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from werkzeug.security import check_password_hash, generate_password_hash
 import donor_login1
 import mysql.connector
+import os
+
 
 app = Flask(__name__)
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 PICTURE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 IMAGES_FOLDER = join(dirname(realpath(__file__)), 'static/images/') # Full path to the static/images directory
@@ -62,7 +65,7 @@ class User(UserMixin):
 
 @login_manager.user_loader
 def load_user(user_id):
-    conn = db_connect.get_db()
+    conn = get_db()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("SELECT * FROM donors WHERE id = %s", (user_id,))
     user = cursor.fetchone()
@@ -138,7 +141,7 @@ def donor_login():
         password_input = form.password.data
         conn = get_db()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM Donor_users WHERE username = %s", (username,))
+        cursor.execute("SELECT * FROM donors WHERE username = %s", (username,))
         user = cursor.fetchone()
         cursor.close()
         conn.close()
@@ -167,7 +170,7 @@ def donor_registration():
         print("Username:", form.username.data)
         try:
             print("Trying to insert into DB...")
-            cursor.execute("INSERT INTO Donor_users (username, password) VALUES (%s, %s)", (username, password))
+            cursor.execute("INSERT INTO donors (username, password) VALUES (%s, %s)", (username, password))
             conn.commit()
             print("User inserted.")
             flash("User registered!", "success")
