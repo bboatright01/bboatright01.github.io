@@ -1,11 +1,11 @@
 from flask import Flask, render_template, jsonify, request, redirect, flash, url_for
-from database import load_campaigns, add_new_campaign
+from database import load_campaigns, add_new_campaign, get_db
 from werkzeug.utils import secure_filename
 from os.path import join, dirname, realpath, isfile
-from flask_login import LoginManager
-from donor_login import LoginForm, User, RegisterForm
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
-from db_connect import get_db
+import donor_login
+import mysql.connector
 
 app = Flask(__name__)
 
@@ -86,10 +86,9 @@ def create_campaign():
 def carousel():
     return render_template('carousel.html', campaigns=get_campaigns(), comma_num = to_string) # Pass the list of campaigns to the template, as well as the to_string function
 
-
 @app.route('/donor-login', methods=['GET', 'POST'])
 def donor_login():
-    form = LoginForm()
+    form = donor_login.LoginForm()
     print("Form method:", request.method)
     print("Form errors:", form.errors)
     if form.validate_on_submit():
@@ -104,12 +103,56 @@ def donor_login():
         print("Form validated!")
         print("Username:", form.username.data)
         if user and check_password_hash(user['password'], password_input):
-            user_obj = User(user['id'], user['username'], user['password'])
+            user_obj = donor_login.User(user['id'], user['username'], user['password'])
             login_user(user_obj)
             flash("Login successful", "success")
             return redirect(url_for('donor_dashboard'))
         flash("Invalid credentials", "danger")
     return render_template('donor-login.html', form=form)
+
+
+@app.route('/donor-registration', methods=['GET', 'POST'])
+def donor_registration():
+    form = donor_login.RegisterForm()
+    print("Form method:", request.method)
+    print("Form errors:", form.errors)
+    if form.validate_on_submit():
+        username = form.username.data
+        password = generate_password_hash(form.password.data)
+        conn = get_db()
+        cursor = conn.cursor()
+        print("Form validated!")
+        print("Username:", form.username.data)
+        try:
+            print("Trying to insert into DB...")
+            cursor.execute("INSERT INTO Donor_users (username, password) VALUES (%s, %s)", (username, password))
+            conn.commit()
+            print("User inserted.")
+            flash("User registered!", "success")
+            return redirect(url_for('donor_login'))
+        except mysql.connector.IntegrityError:
+            flash("Username already taken.", "danger")
+        except Exception as e:
+            print("Error inserting user:", e)
+            flash("An error occurred during registration.", "danger")
+        finally:
+            cursor.close()
+            conn.close()
+    return render_template('donor-registration.html', form=form)
+
+
+@app.route('/donor-dashboard')
+@login_required
+def donor_dashboard():
+    return render_template('donor-dashboard.html', user=current_user, campaigns=get_campaigns())
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash("Logged out", "info")
+    return redirect(url_for('donor-login'))
 
 if __name__ == '__main__':
     app.run(debug=True)

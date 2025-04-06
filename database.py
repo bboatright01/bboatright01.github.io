@@ -1,12 +1,15 @@
 from sqlalchemy import create_engine, text
 from dotenv import load_dotenv
 import os
+import mysql.connector
+
 
 load_dotenv()
 
 db_credentials = os.getenv("DATABASE_CREDENTIALS") # Ensure this is set in your .env file which stores your database connection string
 
 engine = create_engine(db_credentials)
+#engine = mysql.connector.connect(db_credentials)
 
 def load_campaigns():
     with engine.connect() as conn:
@@ -27,5 +30,12 @@ def add_new_campaign(data):
                 'Funding_Goal': data['funding-goal']
             })
         conn.commit()
-
         return result
+    
+def get_db():
+    return mysql.connector.connect(
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME")
+    )

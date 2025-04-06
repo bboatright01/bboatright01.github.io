@@ -1,4 +1,4 @@
-import db_connect
+from database import get_db
 from flask import Flask, render_template, request, redirect, url_for, flash
 import flask_login
 from flask_login import LoginManager
@@ -19,7 +19,7 @@ class User(UserMixin):
 
 @login_manager.user_loader
 def load_user(user_id):
-    conn = db_connect.get_db()
+    conn = get_db()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("SELECT * FROM Donor_users WHERE id = %s", (user_id,))
     user = cursor.fetchone()
