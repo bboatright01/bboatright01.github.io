@@ -91,7 +91,7 @@ class LoginForm(FlaskForm):
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('home.html', campaigns=get_campaigns(), comma_num = to_string)
 
 @app.route('/about')
 def about():
@@ -124,7 +124,8 @@ def create_campaign():
         path = IMAGES_FOLDER
         file.save(path + filename) # Save the file to the static/images directory
     
-    return jsonify({"id": new_campaign.lastrowid, **data}) #This will return the data in JSON format; temporary until confirmation page is created
+    return render_template('create-submit.html', data=data)
+    #return jsonify({"id": new_campaign.lastrowid, **data}) #This will return the data in JSON format; temporary until confirmation page is created
 
 # Route for the carousel page; template that enables dynamic display of campaign cards that can connect to database
 @app.route('/carousel') 
