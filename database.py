@@ -21,12 +21,12 @@ def load_campaigns():
     
 def add_new_campaign(data):
     with engine.connect() as conn:
-        result = conn.execute(text("INSERT INTO campaigns (Name, Description, Country, NGO, Funding_Goal) VALUES (:Name, :Description, :Country, :NGO, :Funding_Goal)"), 
+        result = conn.execute(text("INSERT INTO campaigns (Name, Description, Country, NGO_ID, Funding_Goal) VALUES (:Name, :Description, :Country, :NGO_ID, :Funding_Goal)"), 
             {
                 'Name': data['campaign-name'],
                 'Description': data['campaign-description'],
                 'Country': data['country'],
-                'NGO': "WaterWorks International",
+                'NGO_ID': 1, # Needs to be updated to be dynamic based on the NGO that is logged in
                 'Funding_Goal': data['funding-goal']
             })
         conn.commit()

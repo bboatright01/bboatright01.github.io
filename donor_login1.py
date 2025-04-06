@@ -21,7 +21,7 @@ class User(UserMixin):
 def load_user(user_id):
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM Donor_users WHERE id = %s", (user_id,))
+    cursor.execute("SELECT * FROM donors WHERE id = %s", (user_id,))
     user = cursor.fetchone()
     cursor.close()
     conn.close()
