@@ -1,16 +1,11 @@
-from flask import Flask, render_template, jsonify, request, redirect, flash, url_for
-from database import load_campaigns, add_new_campaign, get_db
+from flask import render_template, request, redirect, flash, url_for
+from database import app, load_campaigns, add_new_campaign, get_db
 from werkzeug.utils import secure_filename
 from os.path import join, dirname, realpath, isfile
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
-import donor_login1
+import login
 import mysql.connector
-import os
-
-
-app = Flask(__name__)
-app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 PICTURE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 IMAGES_FOLDER = join(dirname(realpath(__file__)), 'static/images/') # Full path to the static/images directory
@@ -42,52 +37,6 @@ def get_campaigns():
             if (isfile(IMAGES_FOLDER + str(campaign['id']) + '.' + extension)):
                 campaign['Image'] = str(campaign['id']) + '.' + extension
     return campaigns
-
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
-
-from flask import Flask, render_template, request, redirect, url_for, flash
-import flask_login
-from flask_login import LoginManager
-from flask_login import UserMixin
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import InputRequired, Length, Email, EqualTo
-
-#from app import login_manager
-
-class User(UserMixin):
-    def __init__(self, id, username, password):
-        self.id = id
-        self.username = username
-        self.password = password
-
-@login_manager.user_loader
-def load_user(user_id):
-    conn = get_db()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM donors WHERE id = %s", (user_id,))
-    user = cursor.fetchone()
-    cursor.close()
-    conn.close()
-    if user:
-        return User(user['id'], user['username'], user['password'])
-    return None
-
-class RegisterForm(FlaskForm):
-    username = StringField('Username', validators=[InputRequired(), Length(min=4, max=150)])
-    email = StringField('Email', validators=[InputRequired(), Email(), Length(max=250)])
-    password = PasswordField('Password', validators=[InputRequired(), Length(min=6)])
-    confirm_password = PasswordField('Confirm Password', validators=[InputRequired(), EqualTo('password', message='Passwords must match.')])
-    submit = SubmitField('Register')
-
-
-class LoginForm(FlaskForm):
-    username = StringField('Username or Email', validators=[InputRequired(), Length(min=4, max=150)])
-    password = PasswordField('Password', validators=[InputRequired(), Length(min=6)])
-    submit = SubmitField('Log In')
-
 
 @app.route('/')
 def home():
@@ -134,7 +83,7 @@ def carousel():
 
 @app.route('/donor-login', methods=['GET', 'POST'])
 def donor_login():
-    form = donor_login1.LoginForm()
+    form = login.LoginForm()
     print("Form method:", request.method)
     print("Form errors:", form.errors)
     if form.validate_on_submit():
@@ -149,7 +98,7 @@ def donor_login():
         print("Form validated!")
         print("Username:", form.username.data)
         if user and check_password_hash(user['password'], password_input):
-            user_obj = donor_login1.User(user['id'], user['username'], user['password'])
+            user_obj = login.User(user['id'], user['username'], user['password'])
             login_user(user_obj)
             flash("Login successful", "success")
             return redirect(url_for('donor_dashboard'))
@@ -159,7 +108,7 @@ def donor_login():
 
 @app.route('/donor-registration', methods=['GET', 'POST'])
 def donor_registration():
-    form = donor_login1.RegisterForm()
+    form = login.RegisterForm()
     print("Form method:", request.method)
     print("Form errors:", form.errors)
     if form.validate_on_submit():

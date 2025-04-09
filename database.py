@@ -1,11 +1,13 @@
+from flask import Flask
 from sqlalchemy import create_engine, text
 from dotenv import load_dotenv
 import os
 import mysql.connector
 
-
 load_dotenv()
 
+app = Flask(__name__)
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
 db_credentials = os.getenv("DATABASE_CREDENTIALS") # Ensure this is set in your .env file which stores your database connection string
 
 engine = create_engine(db_credentials)

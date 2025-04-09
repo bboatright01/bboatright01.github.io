@@ -1,14 +1,14 @@
 from database import get_db
-from flask import Flask, render_template, request, redirect, url_for, flash
-import flask_login
 from flask_login import LoginManager
 from flask_login import UserMixin
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, Email, EqualTo
+from database import app
 
-from app import login_manager
-
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 class User(UserMixin):
     def __init__(self, id, username, password):
@@ -21,7 +21,7 @@ class User(UserMixin):
 def load_user(user_id):
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM Donor_users WHERE id = %s", (user_id,))
+    cursor.execute("SELECT * FROM donors WHERE id = %s", (user_id,))
     user = cursor.fetchone()
     cursor.close()
     conn.close()
