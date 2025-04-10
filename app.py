@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, flash, url_for
+from flask import render_template, request, redirect, flash, url_for, jsonify
 from database import app, load_campaigns, add_new_campaign, get_db
 from werkzeug.utils import secure_filename
 from os.path import join, dirname, realpath, isfile
@@ -6,6 +6,9 @@ from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 import login
 import mysql.connector
+from search import index_campaigns
+from whoosh.qparser import QueryParser, OrGroup
+from whoosh.index import open_dir
 
 PICTURE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 IMAGES_FOLDER = join(dirname(realpath(__file__)), 'static/images/') # Full path to the static/images directory
@@ -37,6 +40,8 @@ def get_campaigns():
             if (isfile(IMAGES_FOLDER + str(campaign['id']) + '.' + extension)):
                 campaign['Image'] = str(campaign['id']) + '.' + extension
     return campaigns
+
+index_campaigns(get_campaigns())
 
 @app.route('/')
 def home():
@@ -75,6 +80,21 @@ def create_campaign():
     
     return render_template('create-submit.html', data=data)
     #return jsonify({"id": new_campaign.lastrowid, **data}) #This will return the data in JSON format; temporary until confirmation page is created
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    if request.method == 'POST':
+        query_string = request.form.get('search-query')
+        index = open_dir("search_index")
+        terms = query_string.split()
+        query_parser = QueryParser("description", index.schema, group=OrGroup)
+        query = query_parser.parse(" OR ".join(terms))
+        with index.searcher() as searcher:
+            results = searcher.search(query)
+            search_results_ids = [{"id": int(result["id"])} for result in results]
+            print(search_results_ids)
+            return jsonify(search_results_ids)
+    return render_template('search.html')
 
 # Route for the carousel page; template that enables dynamic display of campaign cards that can connect to database
 @app.route('/carousel') 
