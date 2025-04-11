@@ -1,12 +1,17 @@
+<!-- Links to the external stylesheet -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/search.css') }}"> <!-- url_for required to use style sheet with flask-->
+
 {% include 'header.html' %} <!-- This is a jinja template that imports header.html into search.html-->
 
 <form id="campaign-form" name="campaign-form" action="/search" method="post" enctype="application/x-www-form-urlencoded">
-    <div class="form-box">
-        <label class="field-descriptor">Search</label>
-        <input type="text" required maxlength="250" class="form-input" id="campaign-name" name="search-query">
-    </div>
-    <div class="form-box">
-        <button type="submit" class="submit-button">Search</button>
+    <div class="search-container">
+        <div class="form-box">
+            <label class="field-descriptor"></label>
+            <input type="text" required maxlength="250" class="form-input" id="campaign-name" name="search-query">
+        </div>
+        <div class="form-box">
+            <button type="submit" class="submit-button">Search</button>
+        </div>
     </div>
 </form>
 

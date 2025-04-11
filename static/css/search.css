@@ -1,0 +1,55 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+/* Sets spacing between form elements */
+.form-box {
+    /*display: grid;*/
+    /*place-items: center;*/
+    margin: 20px 10px;
+
+}
+/* Sets the width and height of the form input fields */
+.form-input {
+    height: 50px;
+}
+/* Sets the font family and size for the form input text */
+input[type="text"]{
+    font-family: monospace;
+    font-size: 24px;
+    
+    background-color: white;
+    border-radius: 5px;
+}
+/* Styles the form submit button */
+.submit-button {
+    height: 50px;
+    width: calc(100% + 30px);
+    font-size: 24px;
+    font-family: monospace;
+    background-color: #4CAF50;
+    color: #feffea;
+    border: 2px solid #ccc;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+}
+/* Sets the font family, size, and weight of each field descriptor */
+.field-descriptor {
+    font-size: 24px;
+    font-family: monospace;
+    font-weight: bold;
+}
+.search-container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+}
