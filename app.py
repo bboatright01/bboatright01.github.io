@@ -80,7 +80,7 @@ def create_campaign():
         filename = secure_filename(number_filename)
         path = IMAGES_FOLDER
         file.save(path + filename) # Save the file to the static/images directory
-    
+    index_campaigns(get_campaigns()) # Re-index the campaigns after adding a new one
     return render_template('create-submit.html', data=data)
     #return jsonify({"id": new_campaign.lastrowid, **data}) #This will return the data in JSON format; temporary until confirmation page is created
 

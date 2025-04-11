@@ -5,7 +5,7 @@ import os
 
 # Define the schema for your index
 schema = Schema(
-    id=KEYWORD(stored=True),
+    id=KEYWORD(stored=True, unique=True),
     name=TEXT(stored=True),
     country=TEXT(stored=True),
     description=TEXT(stored=True)
@@ -22,7 +22,7 @@ def index_campaigns(campaigns):
     index = open_dir("search_index")
     writer = AsyncWriter(index)
     for campaign in campaigns:
-        writer.add_document(
+        writer.update_document(
             id=str(campaign["id"]),
             name=campaign["Name"],
             country=campaign["Country"],
@@ -30,4 +30,3 @@ def index_campaigns(campaigns):
         )
     
     writer.commit()
-    
