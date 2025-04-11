@@ -21,6 +21,15 @@ def load_campaigns():
             campaigns.append(dict(row._mapping)) # Convert the row to a dictionary
         return campaigns
     
+def load_campaigns_by_id(campaign_ids):
+    with engine.connect() as conn:
+        campaigns = []
+        for campaign_id in campaign_ids:
+            result = conn.execute(text("SELECT * FROM campaigns WHERE id = :id"), {'id': campaign_id["id"]})
+            for row in result.all():
+                campaigns.append(dict(row._mapping))
+        return campaigns
+    
 def add_new_campaign(data):
     with engine.connect() as conn:
         result = conn.execute(text("INSERT INTO campaigns (Name, Description, Country, NGO_ID, Funding_Goal) VALUES (:Name, :Description, :Country, :NGO_ID, :Funding_Goal)"), 

@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, flash, url_for, jsonify
-from database import app, load_campaigns, add_new_campaign, get_db
+from database import app, load_campaigns, load_campaigns_by_id, add_new_campaign, get_db
 from werkzeug.utils import secure_filename
 from os.path import join, dirname, realpath, isfile
 from flask_login import login_user, login_required, logout_user, current_user
@@ -30,15 +30,18 @@ def get_file_number(filename):
 def to_string(num): 
     return f'{num:,}'
 
-def get_campaigns():
-    campaigns = load_campaigns() # Load campaigns from the database
-
+def augment_campaigns(campaigns):
     for campaign in campaigns:
         campaign['Raised'] = 10000 # Example data for testing; to be replaced with database
         campaign['Image'] = "default.jpg" # Example data for testing; to be replaced with database
         for extension in PICTURE_EXTENSIONS: #Check if the image file exists in the static/images directory
             if (isfile(IMAGES_FOLDER + str(campaign['id']) + '.' + extension)):
                 campaign['Image'] = str(campaign['id']) + '.' + extension
+    return campaigns
+
+def get_campaigns():
+    campaigns = load_campaigns() # Load campaigns from the database
+    campaigns = augment_campaigns(campaigns) # Augment the campaigns with additional data
     return campaigns
 
 index_campaigns(get_campaigns())
@@ -93,7 +96,10 @@ def search():
             results = searcher.search(query)
             search_results_ids = [{"id": int(result["id"])} for result in results]
             print(search_results_ids)
-            return jsonify(search_results_ids)
+            campaigns = load_campaigns_by_id(search_results_ids) # Load campaigns from the database using the IDs from the search results
+            campaigns = augment_campaigns(campaigns)
+            return render_template('carousel.html', campaigns=campaigns, comma_num = to_string)
+            #return jsonify(search_results_ids)
     return render_template('search.html')
 
 # Route for the carousel page; template that enables dynamic display of campaign cards that can connect to database
