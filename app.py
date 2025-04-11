@@ -7,7 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import login
 import mysql.connector
 from search import index_campaigns
-from whoosh.qparser import QueryParser, OrGroup
+from whoosh.qparser import QueryParser, MultifieldParser, OrGroup
 from whoosh.index import open_dir
 
 PICTURE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
@@ -90,7 +90,7 @@ def search():
         query_string = request.form.get('search-query')
         index = open_dir("search_index")
         terms = query_string.split()
-        query_parser = QueryParser("description", index.schema, group=OrGroup)
+        query_parser = MultifieldParser(["name", "country", "description"], index.schema, group=OrGroup)
         query = query_parser.parse(" OR ".join(terms))
         with index.searcher() as searcher:
             results = searcher.search(query)
