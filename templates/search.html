@@ -3,16 +3,19 @@
 
 {% include 'header.html' %} <!-- This is a jinja template that imports header.html into search.html-->
 
-<form id="campaign-form" name="campaign-form" action="/search" method="post" enctype="application/x-www-form-urlencoded">
-    <div class="search-container">
-        <div class="form-box">
-            <label class="field-descriptor"></label>
-            <input type="text" required maxlength="250" class="form-input" id="campaign-name" name="search-query">
+<main>
+    <h1>Search Campaigns</h1>
+    <form id="search-form" name="search-form" action="/search" method="post" enctype="application/x-www-form-urlencoded">
+        <div class="search-container">
+            <div class="form-box">
+                <label class="field-descriptor"></label>
+                <input type="text" required maxlength="250" class="form-input" id="campaign-name" name="search-query">
+            </div>
+            <div class="form-box">
+                <button type="submit" class="submit-button">Search</button>
+            </div>
         </div>
-        <div class="form-box">
-            <button type="submit" class="submit-button">Search</button>
-        </div>
-    </div>
-</form>
+    </form>
+</main>
 
 {% include 'footer.html' %} <!-- This is a jinja template that imports footer.html into search.html-->
