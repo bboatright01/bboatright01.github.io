@@ -10,7 +10,7 @@ body {
 }
 /* Sets margins between top and bottom of form container, some internal padding, and the width */
 .form-container {
-    background-color: white;
+    background-color: #feffea;
     margin-top: 80px;
     margin-bottom: 80px;
     border: 1px solid black;
@@ -41,14 +41,14 @@ input[type="text"]{
     font-family: monospace;
     font-size: 24px;
     
-    background-color: #feffea;
+    background-color: white;
     border-radius: 5px;
 }
 /* Sets the height of the campaign description field and the font size */
 #campaign-description {
     height: 200px;
     font-size: 24px;
-    background-color: #feffea;
+    background-color: white;
     border-radius: 5px;
 }
 /* Sets the width, height, font size, and font family of the form dropdowns */
@@ -57,7 +57,7 @@ input[type="text"]{
     height: 40px;
     font-size: 24px;
     font-family: monospace;
-    background-color: #feffea;
+    background-color: white;
     border-radius: 5px;
 }
 /* Styles the form submit button */
@@ -67,7 +67,7 @@ input[type="text"]{
     font-size: 24px;
     font-family: monospace;
     background-color: #4CAF50;
-    color: white;
+    color: #feffea;
     border: 2px solid #ccc;
     cursor: pointer;
     font-weight: bold;

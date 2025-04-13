@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/create.css') }}">
+</head>
+<body>
+
+    {% include 'header.html' %}
+
+    <div class="container">
+
+        <div class="dashboard-section">
+            <h2>Campaign Successfully Created</h2>
+            <ul class="create-successful">
+                    <li>
+                        <strong>Name: {{ data['campaign-name'] }}</strong>
+                    </li>
+                    <li>
+                        <strong>Funding Goal: {{ data['funding-goal'] }}</strong>
+                    </li>
+                    <li>
+                        <strong>Country: {{ data['country'] }}</strong>
+                    </li>
+                    <li>
+                        <strong>Campaign Type: {{ data['campaign-type'] }}</strong>
+                    </li>
+                    <li>
+                        <strong>Campaign Description: {{ data['campaign-description'] }}</strong>
+                    </li>
+            </ul>
+        </div>
+
+    </div>
+
+    {% include 'footer.html' %}
+
+</body>
+</html>
