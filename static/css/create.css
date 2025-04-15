@@ -51,6 +51,14 @@ input[type="text"]{
     background-color: white;
     border-radius: 5px;
 }
+/* Sets the font family and size for the form input password */
+input[type="password"]{
+    font-family: monospace;
+    font-size: 24px;
+    
+    background-color: white;
+    border-radius: 5px;
+}
 /* Sets the height of the campaign description field and the font size */
 #campaign-description {
     height: 200px;
