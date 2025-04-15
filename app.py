@@ -10,15 +10,12 @@ from whoosh.index import open_dir
 from login import User, Donor, load_user, RegisterForm, LoginForm
 from search import index_campaigns
 from database import get_db_url, get_db_engine
-from campaigns import load_campaigns, load_campaigns_by_id, add_new_campaign
+from campaigns import load_campaigns, load_campaigns_by_id, add_new_campaign, get_campaigns, augment_campaigns
 from app_factory import app, db, engine
 
 
 PICTURE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
-IMAGES_FOLDER = join(dirname(realpath(__file__)), 'static/images/') # Full path to the static/images directory
-
-print(Donor.__table__.columns.keys())
-
+IMAGES_FOLDER = join(dirname(realpath(__file__)), 'static/images/')  # Full path to the static/images directory
 
 # Check if file type is allowed
 def allowed_file(filename):
@@ -41,27 +38,15 @@ def to_string(num):
     return f'{num:,}'
 
 
-def augment_campaigns(campaigns):
-    for campaign in campaigns:
-        campaign['Raised'] = 10000 # Example data for testing; to be replaced with database
-        campaign['Image'] = "default.jpg" # Example data for testing; to be replaced with database
-        for extension in PICTURE_EXTENSIONS: #Check if the image file exists in the static/images directory
-            if (isfile(IMAGES_FOLDER + str(campaign['id']) + '.' + extension)):
-                campaign['Image'] = str(campaign['id']) + '.' + extension
-    return campaigns
+with app.app_context():
+    from campaigns import load_campaigns
+    from search import index_campaigns
 
-
-def get_campaigns():
-    campaigns = load_campaigns() # Load campaigns from the database
-    campaigns = augment_campaigns(campaigns) # Augment the campaigns with additional data
-    return campaigns
-
-
-index_campaigns(get_campaigns())
+    index_campaigns(load_campaigns())
 
 @app.route('/')
 def home():
-    return render_template('home.html', campaigns=get_campaigns(), comma_num = to_string)
+    return render_template('home.html', campaigns=get_campaigns(PICTURE_EXTENSIONS, IMAGES_FOLDER), comma_num = to_string)
 
 @app.route('/about')
 def about():
@@ -110,8 +95,9 @@ def search():
             results = searcher.search(query)
             search_results_ids = [{"id": int(result["id"])} for result in results]
             print(search_results_ids)
-            campaigns = load_campaigns_by_id(search_results_ids)  # Load campaigns from the database using the IDs from the search results
-            campaigns = augment_campaigns(campaigns)
+            # Load campaigns from the database using the IDs from the search results
+            campaigns = load_campaigns_by_id(search_results_ids)
+            campaigns = augment_campaigns(campaigns, PICTURE_EXTENSIONS, IMAGES_FOLDER)
             print(campaigns)
             return render_template('search-results.html', campaigns=campaigns, comma_num = to_string)
             # return jsonify(search_results_ids)
@@ -120,7 +106,8 @@ def search():
 # Route for the carousel page; template that enables dynamic display of campaign cards that can connect to database
 @app.route('/carousel') 
 def carousel():
-    return render_template('carousel.html', campaigns=get_campaigns(), comma_num = to_string)  # Pass the list of campaigns to the template, as well as the to_string function
+    # Pass the list of campaigns to the template, as well as the to_string function
+    return render_template('carousel.html', campaigns=get_campaigns(), comma_num = to_string)
 
 
 @app.route('/donor-login', methods=['GET', 'POST'])
@@ -176,7 +163,7 @@ def donor_registration():
 @app.route('/donor-dashboard')
 @login_required
 def donor_dashboard():
-    return render_template('donor-dashboard.html', user=current_user, campaigns=get_campaigns())
+    return render_template('donor-dashboard.html', user=current_user, campaigns=get_campaigns(PICTURE_EXTENSIONS, IMAGES_FOLDER))
 
 
 @app.route('/logout')
