@@ -1,13 +1,13 @@
-from flask import Flask, render_template, request, redirect, flash, url_for, jsonify
+from flask import Flask, render_template, request, redirect, flash, url_for, jsonify, session
 from werkzeug.utils import secure_filename
-
+from functools import wraps
 from os.path import join, dirname, realpath, isfile
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from whoosh.qparser import QueryParser, MultifieldParser, OrGroup
 from whoosh.index import open_dir
 
-from login import User, Donor, load_user, RegisterForm, LoginForm, Subscription
+from login import User, Donor, NGO, load_user, RegisterForm, LoginForm, Subscription
 from search import index_campaigns
 from database import get_db_url, get_db_engine
 from campaigns import load_campaigns, load_campaigns_by_id, add_new_campaign, get_campaigns, augment_campaigns, Campaign
@@ -61,28 +61,6 @@ def create():
     return render_template('create.html')
 
 
-# Route for the create campaign page; this will be the form that the user fills out to create a new campaign
-@app.route('/create/submit', methods=['POST']) #This will fetch the data from the form
-def create_campaign():
-    if 'file' not in request.files:
-        return 'No file part in the request', 400
-    file = request.files['file']
-    filename = "default.jpg" # Default image if no file is selected
-    if file and not allowed_file(file.filename):
-        return 'File type must be of type png, jpg, jpeg, gif, or webp', 400
-    data = request.form
-    if not data['funding-goal'].isdigit():
-        return 'Funding goal must be a number', 400
-    new_campaign = add_new_campaign(data) # Add the new campaign to the database and return the entry
-    if file:
-        number_filename = number_file(file.filename, new_campaign.lastrowid)
-        filename = secure_filename(number_filename)
-        path = IMAGES_FOLDER
-        file.save(path + filename) # Save the file to the static/images directory
-    index_campaigns(get_campaigns()) # Re-index the campaigns after adding a new one
-    return render_template('create-submit.html', data=data)
-
-
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if request.method == 'POST':
@@ -130,6 +108,61 @@ def donor_login():
     return render_template('donor-login.html', form=form)
 
 
+
+@app.route('/ngo-login', methods=['GET', 'POST'])
+def ngo_login():
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+
+        ngo = NGO.query.filter_by(username=username).first()
+        if ngo and check_password_hash(ngo.password, password):
+            session['ngo_id'] = ngo.id
+            session['ngo_name'] = ngo.name
+            flash("NGO login successful!", "success")
+            return redirect(url_for('ngo_dashboard'))
+
+        flash("Invalid credentials", "danger")
+
+    return render_template('ngo-login.html', form=form)
+
+
+def ngo_login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'ngo_id' not in session:
+            flash("Please log in as an NGO to access this page.", "warning")
+            return redirect(url_for('ngo_login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+# Route for the create campaign page; this will be the form that the user fills out to create a new campaign
+@app.route('/create/submit', methods=['POST']) #This will fetch the data from the form
+@ngo_login_required
+def create_campaign():
+    if 'file' not in request.files:
+        return 'No file part in the request', 400
+    file = request.files['file']
+    filename = "default.jpg" # Default image if no file is selected
+    if file and not allowed_file(file.filename):
+        return 'File type must be of type png, jpg, jpeg, gif, or webp', 400
+    data = request.form
+    if not data['funding-goal'].isdigit():
+        return 'Funding goal must be a number', 400
+    new_campaign = add_new_campaign(data) # Add the new campaign to the database and return the entry
+    if file:
+        number_filename = number_file(file.filename, new_campaign.lastrowid)
+        filename = secure_filename(number_filename)
+        path = IMAGES_FOLDER
+        file.save(path + filename) # Save the file to the static/images directory
+    index_campaigns(get_campaigns()) # Re-index the campaigns after adding a new one
+    return render_template('create-submit.html', data=data)
+
+
+
 @app.route('/donor-registration', methods=['GET', 'POST'])
 def donor_registration():
     form = RegisterForm()
@@ -169,6 +202,20 @@ def donor_dashboard():
     return render_template('donor-dashboard.html', user=current_user, campaigns=campaigns)
 
 
+@app.route('/ngo-dashboard')
+@ngo_login_required
+def ngo_dashboard():
+    ngo_id = session.get('ngo_id')
+    if not ngo_id:
+        flash("Please log in as an NGO to access the dashboard.", "warning")
+        return redirect(url_for('ngo_login'))
+
+    ngo = NGO.query.get(ngo_id)
+    campaigns = Campaign.query.filter_by(NGO_ID=ngo.id).all()
+
+    return render_template('ngo-dashboard.html', ngo=ngo, campaigns=campaigns)
+
+
 @app.route('/campaign/<int:campaign_id>')
 def campaign_detail(campaign_id):
     campaign = Campaign.query.get_or_404(campaign_id)
@@ -202,6 +249,7 @@ def subscribe(campaign_id):
     return redirect(url_for('campaign_detail', campaign_id=campaign_id))
 
 
+
 @app.route('/unsubscribe/<int:campaign_id>', methods=['POST'])
 @login_required
 def unsubscribe(campaign_id):
@@ -221,11 +269,18 @@ def unsubscribe(campaign_id):
 
 
 @app.route('/logout')
-@login_required
 def logout():
-    logout_user()
+    # Log out donor if logged in
+    if current_user.is_authenticated:
+        logout_user()
+
+    # Log out NGO if logged in
+    if 'ngo_id' in session:
+        session.pop('ngo_id', None)
+        session.pop('ngo_name', None)
+
     flash("Logged out", "info")
-    return redirect(url_for('donor-login'))
+    return redirect(url_for('home'))  # Or to donor-login, if you prefer
 
 
 if __name__ == '__main__':

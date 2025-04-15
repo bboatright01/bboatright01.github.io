@@ -4,7 +4,7 @@ from app_factory import db
 
 
 class Campaign(db.Model):
-    __tablename__ = 'campaigns'
+    __tablename__ = 'Campaigns'
 
     id = db.Column(db.Integer, primary_key=True)
     Name = db.Column(db.String(255), nullable=False)
