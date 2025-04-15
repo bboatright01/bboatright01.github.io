@@ -95,10 +95,8 @@ def search():
         with index.searcher() as searcher:
             results = searcher.search(query)
             search_results_ids = [{"id": int(result["id"])} for result in results]
-            print(search_results_ids)
             campaigns = load_campaigns_by_id(search_results_ids) # Load campaigns from the database using the IDs from the search results
             campaigns = augment_campaigns(campaigns)
-            print(campaigns)
             return render_template('search-results.html', campaigns=campaigns, comma_num = to_string)
             #return jsonify(search_results_ids)
     return render_template('search.html')
