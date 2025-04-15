@@ -7,10 +7,10 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from whoosh.qparser import QueryParser, MultifieldParser, OrGroup
 from whoosh.index import open_dir
 
-from login import User, Donor, load_user, RegisterForm, LoginForm
+from login import User, Donor, load_user, RegisterForm, LoginForm, Subscription
 from search import index_campaigns
 from database import get_db_url, get_db_engine
-from campaigns import load_campaigns, load_campaigns_by_id, add_new_campaign, get_campaigns, augment_campaigns
+from campaigns import load_campaigns, load_campaigns_by_id, add_new_campaign, get_campaigns, augment_campaigns, Campaign
 from app_factory import app, db, engine
 
 
@@ -81,7 +81,7 @@ def create_campaign():
         file.save(path + filename) # Save the file to the static/images directory
     index_campaigns(get_campaigns()) # Re-index the campaigns after adding a new one
     return render_template('create-submit.html', data=data)
-    # return jsonify({"id": new_campaign.lastrowid, **data}) #This will return the data in JSON format; temporary until confirmation page is created
+
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
@@ -163,7 +163,61 @@ def donor_registration():
 @app.route('/donor-dashboard')
 @login_required
 def donor_dashboard():
-    return render_template('donor-dashboard.html', user=current_user, campaigns=get_campaigns(PICTURE_EXTENSIONS, IMAGES_FOLDER))
+    subscription_campaign_ids = [s.campaign_id for s in Subscription.query.filter_by(donor_id=current_user.id).all()]
+    campaigns = Campaign.query.filter(Campaign.id.in_(subscription_campaign_ids)).all()
+    campaigns = campaigns = Campaign.query.filter(Campaign.id.in_(subscription_campaign_ids)).all()
+    return render_template('donor-dashboard.html', user=current_user, campaigns=campaigns)
+
+
+@app.route('/campaign/<int:campaign_id>')
+def campaign_detail(campaign_id):
+    campaign = Campaign.query.get_or_404(campaign_id)
+
+    is_subscribed = False
+    if current_user.is_authenticated:
+        is_subscribed = Subscription.query.filter_by(
+            donor_id=current_user.id,
+            campaign_id=campaign.id
+        ).first() is not None
+
+    return render_template('campaign-detail.html', campaign=campaign, is_subscribed=is_subscribed)
+
+
+@app.route('/subscribe/<int:campaign_id>', methods=['POST'])
+@login_required
+def subscribe(campaign_id):
+    existing = Subscription.query.filter_by(
+        donor_id=current_user.id,
+        campaign_id=campaign_id
+    ).first()
+
+    if not existing:
+        new_sub = Subscription(donor_id=current_user.id, campaign_id=campaign_id)
+        db.session.add(new_sub)
+        db.session.commit()
+        flash("You are now subscribed!", "success")
+    else:
+        flash("You're already subscribed.", "info")
+
+    return redirect(url_for('campaign_detail', campaign_id=campaign_id))
+
+
+@app.route('/unsubscribe/<int:campaign_id>', methods=['POST'])
+@login_required
+def unsubscribe(campaign_id):
+    sub = Subscription.query.filter_by(
+        donor_id=current_user.id,
+        campaign_id=campaign_id
+    ).first()
+
+    if sub:
+        db.session.delete(sub)
+        db.session.commit()
+        flash("You have unsubscribed from this campaign.", "info")
+    else:
+        flash("You're not subscribed to this campaign.", "warning")
+
+    return redirect(url_for('campaign_detail', campaign_id=campaign_id))
 
 
 @app.route('/logout')

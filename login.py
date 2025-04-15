@@ -24,6 +24,19 @@ class Donor(UserMixin, db.Model):
     username = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     name = db.Column(db.String(255))
+    subscriptions = db.relationship('Subscription', backref='donor', lazy=True)
+
+
+class Subscription(db.Model):
+    __tablename__ = 'subscriptions'
+
+    id = db.Column(db.Integer, primary_key=True)
+    donor_id = db.Column(db.Integer, db.ForeignKey('donors.id'), nullable=False)
+    campaign_id = db.Column(db.Integer, db.ForeignKey('campaigns.id'), nullable=False)
+
+    __table_args__ = (
+        db.UniqueConstraint('donor_id', 'campaign_id', name='_donor_campaign_uc'),
+    )
 
 
 @login_manager.user_loader

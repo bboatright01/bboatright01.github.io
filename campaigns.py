@@ -7,20 +7,20 @@ class Campaign(db.Model):
     __tablename__ = 'campaigns'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    country = db.Column(db.String(100), nullable=False)
-    ngo_id = db.Column(db.Integer, nullable=False)
-    funding_goal = db.Column(db.Integer, nullable=False)
+    Name = db.Column(db.String(255), nullable=False)
+    Description = db.Column(db.Text, nullable=False)
+    Country = db.Column(db.String(100), nullable=False)
+    NGO_ID = db.Column(db.Integer, nullable=False)
+    Funding_Goal = db.Column(db.Integer, nullable=False)
 
     def to_dict(self):
         return {
             'id': self.id,
-            'Name': self.name,
-            'Description': self.description,
-            'Country': self.country,
-            'NGO_ID': self.ngo_id,
-            'Funding_Goal': self.funding_goal
+            'Name': self.Name,
+            'Description': self.Description,
+            'Country': self.Country,
+            'NGO_ID': self.NGO_ID,
+            'Funding_Goal': self.Funding_Goal
         }
 
 def load_campaigns():
