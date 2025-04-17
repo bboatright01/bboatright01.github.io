@@ -10,3 +10,5 @@ env/*
 search_index
 search_index\*
 search_index/*
+**/.idea/workspace.xml
+**/.idea/tasks.xml
