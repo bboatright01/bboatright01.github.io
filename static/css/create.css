@@ -1,8 +1,15 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f9;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+    width: 100%;
     align-items: center;
     background-color: white;
     margin: 0;
@@ -15,7 +22,7 @@ body {
     margin-bottom: 80px;
     border: 1px solid black;
     padding: 0px 40px;
-    width: 550px;
+    max-width: 550px;
 }
 /* Sets the font family, size, and alignment of the form title */
 .form-container h1{
@@ -38,6 +45,14 @@ body {
 }
 /* Sets the font family and size for the form input text */
 input[type="text"]{
+    font-family: monospace;
+    font-size: 24px;
+    
+    background-color: white;
+    border-radius: 5px;
+}
+/* Sets the font family and size for the form input password */
+input[type="password"]{
     font-family: monospace;
     font-size: 24px;
     
