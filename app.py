@@ -211,7 +211,7 @@ def ngo_dashboard():
     ngo = NGO.query.get(ngo_id)
     campaigns = Campaign.query.filter_by(NGO_ID=ngo.id).all()
 
-    return render_template('ngo-dashboard.html', ngo=ngo, campaigns=campaigns)
+    return render_template('ngo-dashboard.html', user=ngo, campaigns=campaigns)
 
 
 @app.route('/campaign/<int:campaign_id>')
@@ -265,6 +265,25 @@ def unsubscribe(campaign_id):
 
     return redirect(url_for('campaign_detail', campaign_id=campaign_id))
 
+# Navigation for website
+@app.route('/ngoprofile')
+@login_required
+def ngo_profile():
+    return render_template('ngoprofile.html', user=current_user)
+
+@app.route('/postedcampaigns')
+@login_required
+def posted_campaigns():
+    return render_template('postedcampaigns.html', user=current_user, campaigns=get_campaigns())
+
+@app.route('/donations')
+@login_required
+def donations():
+    return render_template('donations.html', user=current_user, campaigns=get_campaigns())
+
+@app.route('/donate')
+def donate():
+    return render_template('donate.html')
 
 @app.route('/logout')
 def logout():
