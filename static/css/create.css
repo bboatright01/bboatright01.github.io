@@ -112,3 +112,14 @@ input[type="file"] {
     cursor: pointer;
     border-radius: 5px;
 }
+
+.flash {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.flash.success { background-color: #d4edda; color: #155724; }
+.flash.info    { background-color: #d1ecf1; color: #0c5460; }
+.flash.warning { background-color: #fff3cd; color: #856404; }
+.flash.danger  { background-color: #f8d7da; color: #721c24; }

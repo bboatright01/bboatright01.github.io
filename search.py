@@ -18,9 +18,10 @@ if not os.path.exists("search_index"):
 # Create the index
 index = create_in("search_index", schema)
 
+
 def index_campaigns(campaigns):
-    index = open_dir("search_index")
-    writer = AsyncWriter(index)
+    campaign_index = open_dir("search_index")
+    writer = AsyncWriter(campaign_index)
     for campaign in campaigns:
         writer.update_document(
             id=str(campaign["id"]),
