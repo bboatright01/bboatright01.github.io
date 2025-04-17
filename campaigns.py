@@ -36,11 +36,11 @@ def load_campaigns_by_id(campaign_ids):
 
 def add_new_campaign(data):
     new_campaign = Campaign(
-        name=data['campaign-name'],
-        description=data['campaign-description'],
-        country=data['country'],
-        ngo_id=1,  # Make dynamic later
-        funding_goal=int(data['funding-goal'])
+        Name=data['campaign-name'],
+        Description=data['campaign-description'],
+        Country=data['country'],
+        NGO_ID=1,  # Make dynamic later
+        Funding_Goal=int(data['funding-goal'])
     )
     db.session.add(new_campaign)
     db.session.commit()
