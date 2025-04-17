@@ -1,14 +1,19 @@
-from database import get_db
 from flask_login import LoginManager
 from flask_login import UserMixin
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, Email, EqualTo
-from database import app
 
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
+from app_factory import app, db
+
+donor_login_manager = LoginManager()
+donor_login_manager.init_app(app)
+donor_login_manager.login_view = 'login'
+
+ngo_login_manager = LoginManager()
+ngo_login_manager.login_view = 'ngo_login'
+ngo_login_manager.init_app(app)
+
 
 class User(UserMixin):
     def __init__(self, id, username, password):
@@ -17,20 +22,50 @@ class User(UserMixin):
         self.password = password
 
 
-@login_manager.user_loader
+class Donor(UserMixin, db.Model):
+    __tablename__ = 'Donors'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(255), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.String(255))
+    subscriptions = db.relationship('Subscription', back_populates='donor', lazy=True)
+
+
+class NGO(UserMixin, db.Model):
+    __tablename__ = 'NGOs'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    username = db.Column(db.String(255), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+
+
+class Subscription(db.Model):
+    __tablename__ = 'Subscriptions'
+
+    id = db.Column(db.Integer, primary_key=True)
+    donor_id = db.Column(db.Integer, db.ForeignKey('Donors.id'), nullable=False)
+    campaign_id = db.Column(db.Integer, db.ForeignKey('Campaigns.id'), nullable=False)
+    donor = db.relationship('Donor', back_populates='subscriptions')
+    campaign = db.relationship('Campaign', backref='subscriptions')
+
+    __table_args__ = (
+        db.UniqueConstraint('donor_id', 'campaign_id', name='_donor_campaign_uc'),
+    )
+
+
+@ngo_login_manager.user_loader
+def load_ngo(user_id):
+    return NGO.query.get(int(user_id))
+
+
+@donor_login_manager.user_loader
 def load_user(user_id):
-    conn = get_db()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM donors WHERE id = %s", (user_id,))
-    user = cursor.fetchone()
-    cursor.close()
-    conn.close()
-    if user:
-        return User(user['id'], user['username'], user['password'])
-    return None
+    return Donor.query.get(int(user_id))
 
 
 class RegisterForm(FlaskForm):
+    name = StringField('Name', validators=[InputRequired(), Length(max=250)])
     username = StringField('Username', validators=[InputRequired(), Length(min=4, max=150)])
     email = StringField('Email', validators=[InputRequired(), Email(), Length(max=250)])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=6)])
