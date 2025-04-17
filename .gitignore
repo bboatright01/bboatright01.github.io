@@ -4,3 +4,9 @@ __pycache__/*
 env\*
 env/*
 .env
+.circleci
+.circleci/*
+.circleci\*
+search_index
+search_index\*
+search_index/*
