@@ -158,7 +158,7 @@ def create_campaign():
         return 'Funding goal must be a number', 400
     new_campaign = add_new_campaign(data) # Add the new campaign to the database and return the entry
     if file:
-        number_filename = number_file(file.filename, new_campaign.lastrowid)
+        number_filename = number_file(file.filename, new_campaign.id)
         filename = secure_filename(number_filename)
         path = IMAGES_FOLDER
         file.save(path + filename) # Save the file to the static/images directory

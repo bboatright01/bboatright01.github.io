@@ -1,7 +1,7 @@
 from os.path import isfile
 from app_factory import db
 from donations import total_donated_for_campaign
-
+from flask import session
 
 class Campaign(db.Model):
     __tablename__ = 'Campaigns'
@@ -39,7 +39,7 @@ def add_new_campaign(data):
         Name=data['campaign-name'],
         Description=data['campaign-description'],
         Country=data['country'],
-        NGO_ID=1,  # Make dynamic later
+        NGO_ID=session['ngo_id'],
         Funding_Goal=int(data['funding-goal'])
     )
     db.session.add(new_campaign)
@@ -50,8 +50,8 @@ def add_new_campaign(data):
 
 def augment_campaigns(campaigns, PICTURE_EXTENSIONS, IMAGES_FOLDER):
     for campaign in campaigns:
-        campaign['Raised'] = int(total_donated_for_campaign(campaign['id']))  # Example data for testing; to be replaced with database
-        campaign['Image'] = "default.jpg"  # Example data for testing; to be replaced with database
+        campaign['Raised'] = int(total_donated_for_campaign(campaign['id']))
+        campaign['Image'] = "default.jpg"
         for extension in PICTURE_EXTENSIONS:  # Check if the image file exists in the static/images directory
             if isfile(IMAGES_FOLDER + str(campaign['id']) + '.' + extension):
                 campaign['Image'] = str(campaign['id']) + '.' + extension
