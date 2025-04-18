@@ -407,6 +407,16 @@ footer {
     text-decoration: underline;
 }
 
+/* Removes styling for campaign buttons in carousel */
+.campaign-button {
+    all: unset;
+}
+
+/* Changes the cursor to pointer when hovering over campaign buttons */
+.campaign-button:hover {
+    cursor: pointer;
+}
+
 /* Large screens up to 1200px */
 @media (max-width: 1200px) {
     /* Adjusts the padding for better spacing on smaller screens */

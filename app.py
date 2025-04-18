@@ -85,6 +85,12 @@ def carousel():
     # Pass the list of campaigns to the template, as well as the to_string function
     return render_template('carousel.html', campaigns=get_campaigns(), comma_num = to_string)
 
+@app.route('/campaigns/<int:campaign_id>')
+def campaign(campaign_id):
+    campaign = load_campaigns_by_id([{"id": campaign_id}])
+    campaign = augment_campaigns(campaign, PICTURE_EXTENSIONS, IMAGES_FOLDER)
+    return render_template('campaign-detail.html', campaign=campaign[0])
+
 
 @app.route('/donor-login', methods=['GET', 'POST'])
 def donor_login():
