@@ -1,6 +1,6 @@
 from os.path import isfile
-
 from app_factory import db
+from donations import total_donated_for_campaign
 
 
 class Campaign(db.Model):
@@ -44,12 +44,13 @@ def add_new_campaign(data):
     )
     db.session.add(new_campaign)
     db.session.commit()
+
     return new_campaign
 
 
 def augment_campaigns(campaigns, PICTURE_EXTENSIONS, IMAGES_FOLDER):
     for campaign in campaigns:
-        campaign['Raised'] = 10000  # Example data for testing; to be replaced with database
+        campaign['Raised'] = int(total_donated_for_campaign(campaign['id']))  # Example data for testing; to be replaced with database
         campaign['Image'] = "default.jpg"  # Example data for testing; to be replaced with database
         for extension in PICTURE_EXTENSIONS:  # Check if the image file exists in the static/images directory
             if isfile(IMAGES_FOLDER + str(campaign['id']) + '.' + extension):
