@@ -23,3 +23,15 @@ class Donations(db.Model):
 def total_donated_for_campaign(campaign_id): 
     total_donated = db.session.query(db.func.sum(Donations.Amount)).filter(Donations.CAMPAIGN_ID == campaign_id).scalar()
     return total_donated if total_donated else 0.0
+
+def campaign_donations(campaign_id):
+    donations = Donations.query.filter(Donations.CAMPAIGN_ID == campaign_id).all()
+    return [donation.to_dict() for donation in donations]
+
+def campaign_donations_by_unique_id(campaign_id):
+    donations = Donations.query.filter(Donations.CAMPAIGN_ID == campaign_id).distinct(Donations.DONOR_ID).all()
+    return [donation.to_dict() for donation in donations]
+
+def count_donations_by_unique_id(campaign_id):
+    count = db.session.query(db.func.count(Donations.DONOR_ID)).filter(Donations.CAMPAIGN_ID == campaign_id).distinct(Donations.DONOR_ID).scalar()
+    return count if count else 0.0

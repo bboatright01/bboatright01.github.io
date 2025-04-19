@@ -11,6 +11,8 @@ from login import User, Donor, NGO, load_user, RegisterForm, LoginForm, Subscrip
 from search import index_campaigns
 from database import get_db_url, get_db_engine
 from campaigns import load_campaigns, load_campaigns_by_id, add_new_campaign, get_campaigns, augment_campaigns, Campaign
+from donations import count_donations_by_unique_id, total_donated_for_campaign
+from ngos import get_ngo_by_id
 from app_factory import app, db, engine
 
 
@@ -89,7 +91,10 @@ def carousel():
 def campaign(campaign_id):
     campaign = load_campaigns_by_id([{"id": campaign_id}])
     campaign = augment_campaigns(campaign, PICTURE_EXTENSIONS, IMAGES_FOLDER)
-    return render_template('campaign-detail.html', campaign=campaign[0])
+    donor_count = count_donations_by_unique_id(campaign[0]['id'])
+    total_donated = int(total_donated_for_campaign(campaign[0]['id']))
+    NGO_name = get_ngo_by_id(campaign[0]['NGO_ID'])['Name']
+    return render_template('contact.html', campaign=campaign[0], donor_count=donor_count, total_donated = total_donated, NGO_name=NGO_name)
 
 
 @app.route('/donor-login', methods=['GET', 'POST'])

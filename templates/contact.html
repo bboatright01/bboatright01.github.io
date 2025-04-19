@@ -7,47 +7,410 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            background-color: #feffea; /* Original color */
             margin: 0;
             padding: 0;
-        }
-        .container {
-            width: 80%;
-            margin: auto;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
             color: #333;
         }
-        nav {
+        
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #feffea; /* Original color */
+        }
+        
+        .header-title {
             text-align: center;
+            color: #007bff; /* Original link color */
+            font-size: 28px;
+            margin: 30px 0;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: row; /* Changed to row for side-by-side layout */
+            align-items: flex-start;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .featured-image-container {
+            flex: 0 0 55%; /* Fixed width for image container */
+        }
+        
+        .featured-image {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            height: auto;
+        }
+        
+        .content-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .description {
+            color: #333; /* Original text color */
+            font-size: 18px;
+            margin: 0 0 30px 0;
+        }
+        
+        .cta-button {
+            background-color: #007bff; /* Original button color */
+            color: white;
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+            text-align: center;
+            align-self: flex-start;
             margin-bottom: 20px;
         }
-        nav a {
-            margin: 0 15px;
-            text-decoration: none;
+        
+        .cta-button:hover {
+            background-color: #0056b3; /* Original hover color */
+        }
+        
+        .creator-info {
+            margin-top: 20px;
+        }
+        
+        .creator-name {
             color: #007bff;
             font-weight: bold;
         }
-        nav a:hover {
-            text-decoration: underline;
+        
+        .stats {
+            margin-top: 20px;
+            color: #555;
+        }
+        
+        .last-updated {
+            margin-top: 10px;
+            color: #555;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        /* Tab styling from original code */
+        .tabs {
+            display: flex;
+            border-bottom: 3px solid #4CAF50;
+            margin: 40px 0 20px 0;
+            flex-wrap: wrap; /* Allow tabs to wrap on smaller screens */
+        }
+        
+        .tab-button {
+            padding: 10px 20px;
+            background-color: #f1f1f1;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+            margin-right: 2px;
+        }
+        
+        .tab-button:hover {
+            background-color: #ddd;
+        }
+        
+        .tab-button.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: #feffea;
+            border-radius: 0 0 5px 5px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Subscription form styling */
+        .subscription-section {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .subscription-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .subscription-section form {
+            margin-top: 15px;
+        }
+        
+        .subscription-section input[type="email"] {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .subscription-section input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .subscription-section input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        
+        .unsubscribe-button {
+            background-color: #dc3545;
+        }
+        
+        .unsubscribe-button:hover {
+            background-color: #c82333;
+        }
+        
+        .login-prompt {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border-left: 3px solid #007bff;
+        }
+        
+        .update-item {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .update-date {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        /* Comments section styling from original code */
+        #comments {
+            margin-top: 20px;
+        }
+        
+        #comments p {
+            background-color: white; /* Changed from #feffea to create contrast */
+            padding: 10px;
+            border-left: 3px solid #007bff;
+            margin-bottom: 10px;
+        }
+        
+        form textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+        }
+        
+        form input[type="submit"] {
+            padding: 10px 20px;
+            margin-top: 10px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        form input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .featured-image-container {
+                flex: 0 0 100%;
+            }
+            
+            .content-container {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
+    {% include 'header.html' %}
 
     <div class="container">
-        <nav>
-            <a href="/">Home</a>
-            <a href="/about">About</a>
-            <a href="/contact">Contact</a>
-        </nav>
+        <h1 class="header-title">{{campaign.Name}}</h1>
+        
+        <div class="main-content">
+            <div class="featured-image-container">
+                <img src="{{url_for('static', filename='images/' + campaign.Image)}}" alt="{{campaign.Name}}" class="featured-image">
+            </div>
+            
+            <div class="content-container">
+                <p class="description">{{campaign.Description}}</p>
+                
+                <a href="https://x.com/?lang=en" class="cta-button">Follow us on Twitter for news!</a>
+                
+                <div class="creator-info">
+                    <p>Created by</p>
+                    <p class="creator-name">{{NGO_name}}</p>
+                </div>
+                
+                <div class="stats">
+                    {% if donor_count > 1 %}
+                    <p>{{donor_count}} backers pledged ${{total_donated}} to help bring this project to life.</p>
+                    {% elif donor_count == 1 %}
+                    <p>{{donor_count}} backer pledged ${{total_donated}} to help bring this project to life.</p>
+                    {% elif donor_count == 0 %}
+                    <p>Become the first backer and help bring this project to life!</p>
+                    {% endif %}
+                </div>
+                
+                <div class="last-updated">
+                    <p>Last updated April 4, 2025</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tabs navigation structure from original code -->
+        <div class="tabs">
+            <button class="tab-button" onclick="openTab(event, 'campaign-tab')">Campaign</button>
+            <button class="tab-button" onclick="openTab(event, 'rewards-tab')">Rewards</button>
+            <button class="tab-button" onclick="openTab(event, 'creator-tab')">Creator</button>
+            <button class="tab-button" onclick="openTab(event, 'new-tab')">New</button>
+            <button class="tab-button" onclick="openTab(event, 'faq-tab')">FAQ</button>
+            <button class="tab-button" onclick="openTab(event, 'updates-tab')">Updates</button>
+            <button class="tab-button active" onclick="openTab(event, 'comments-tab')">Comments</button>
+            <button class="tab-button" onclick="openTab(event, 'community-tab')">Community</button>
+        </div>
+        
+        <!-- Tab content -->
+        <div id="campaign-tab" class="tab-content">
+            <h2>Campaign Information</h2>
+            <p>This is the Campaign tab content.</p>
+        </div>
+        
+        <div id="rewards-tab" class="tab-content">
+            <h2>Rewards</h2>
+            <p>This is the Rewards tab content.</p>
+        </div>
+        
+        <div id="creator-tab" class="tab-content">
+            <h2>Creator Profile</h2>
+            <p>This is the Creator tab content.</p>
+        </div>
+        
+        <div id="new-tab" class="tab-content">
+            <h2>What's New</h2>
+            <p>This is the New tab content.</p>
+        </div>
+        
+        <div id="faq-tab" class="tab-content">
+            <h2>Frequently Asked Questions</h2>
+            <p>This is the FAQ tab content.</p>
+        </div>
+        
+        <div id="updates-tab" class="tab-content">
+            <h2>Updates</h2>
+            <div class="subscription-section">
+                <h3>Subscribe for Updates</h3>
+                <p>Get the latest news and developments delivered straight to your inbox.</p>
+                
+                {% if current_user.is_authenticated %}
+                    {% if campaign %}
+                        {% if is_subscribed %}
+                            <form method="POST" action="{{ url_for('unsubscribe', campaign_id=campaign.id) }}">
+                                <p>You are currently subscribed to updates for this campaign.</p>
+                                <input type="submit" value="Unsubscribe" class="cta-button unsubscribe-button">
+                            </form>
+                        {% else %}
+                            <form method="POST" action="{{ url_for('subscribe', campaign_id=campaign.id) }}">
+                                <input type="submit" value="Subscribe" class="cta-button">
+                            </form>
+                        {% endif %}
+                    {% else %}
+                        <p>Campaign information not available for subscription.</p>
+                    {% endif %}
+                {% else %}
+                    <div class="login-prompt">
+                        <p>Please <a href="{{ url_for('donor_login') }}">log in</a> to subscribe for updates about this campaign.</p>
+                        <p>Don't have an account? <a href="{{ url_for('donor_registration') }}">Register here</a>.</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <h3>Recent Updates</h3>
+            <p>No updates have been posted for this campaign yet.</p>
+        </div>
+        
+        <div id="comments-tab" class="tab-content active">
+            <h2>Leave a Comment</h2>
+        
+            <form method="POST" action="/contact">
+                <textarea name="comment" rows="5" placeholder="Write your comment here..." required></textarea><br><br>
+                <input type="submit" value="Submit">
+            </form>
 
-        <h1>Contact Us</h1>
-        <p>This is the Contact page.</p>
+            <h3>Previous Comments</h3>
+            <div id="comments">
+                {% for c in comments %}
+                    <p><strong>{{ c.timestamp }}</strong>: {{ c.text }}</p>
+                {% else %}
+                    <p>No comments yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div id="community-tab" class="tab-content">
+            <h2>Community</h2>
+            <p>This is the Community tab content.</p>
+        </div>
     </div>
-<script src="{{ url_for('static', filename='js/navigation-control.js') }}"></script>
+
+    {% include 'footer.html' %}
+    <script>
+        // Tab functionality
+        function openTab(evt, tabName) {
+            // Hide all tab content
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            // Remove active class from all tab buttons
+            const tabButtons = document.getElementsByClassName("tab-button");
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+            
+            // Show the selected tab and set button as active
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+
+    <script src="{{ url_for('static', filename='js/navigation-control.js') }}"></script>
 </body>
 </html>
