@@ -6,6 +6,12 @@ from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from whoosh.qparser import QueryParser, MultifieldParser, OrGroup
 from whoosh.index import open_dir
+from flask import Flask, render_template, request, redirect
+from datetime import datetime
+from flask import Flask, request, redirect, url_for, flash
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 from login import User, Donor, NGO, load_user, RegisterForm, LoginForm, Subscription
 from search import index_campaigns
@@ -52,10 +58,78 @@ def home():
 def about():
     return render_template('about.html')
 
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
+# Copy from here
+comments = []  # Temporary in-memory store
 
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    if request.method == 'POST':
+        comment_text = request.form['comment']
+        comments.append({'text': comment_text, 'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M')})
+    
+    # Create a dummy campaign or get a default one from your database
+    campaign = Campaign.query.first()  # Get the first campaign as default
+    is_subscribed = False
+    if current_user.is_authenticated and campaign:
+        is_subscribed = Subscription.query.filter_by(
+            donor_id=current_user.id,
+            campaign_id=campaign.id
+        ).first() is not None
+    
+    has_updates = False
+    if campaign and hasattr(campaign, 'Updates'):
+        has_updates = bool(campaign.Updates)
+        
+    return render_template('contact.html', comments=comments, campaign=campaign, 
+                          is_subscribed=is_subscribed, has_updates=has_updates)
+
+
+@app.route('/campaign/<int:campaign_id>/subscribe', methods=['POST'])
+def campaign_subscribe(campaign_id):
+    # Get form data
+    email = request.form.get('email')
+    recipient = request.form.get('recipient', 'frighttrainthemighty@gmail.com')
+    message = request.form.get('message', 'Thank you for subscribing for updates. Sincerely Change 4 Change.')
+    
+    # Send confirmation email
+    try:
+        # Email configuration
+        sender_email = "changechange743@gmail.com"
+        # Generate an app password from Google Account settings
+        sender_password = "zioc eepr fhuq gdxs"  
+        
+        # Create message
+        email_message = MIMEMultipart()
+        email_message["From"] = sender_email
+        email_message["To"] = recipient
+        email_message["Subject"] = "New Subscription to Change 4 Change"
+        
+        # Email content
+        email_message.attach(MIMEText(message, "plain"))
+        
+        # Connect to SMTP server and send email
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()
+            server.login(sender_email, sender_password)
+            server.sendmail(sender_email, recipient, email_message.as_string())
+            print(f"Email sent successfully to {recipient}")
+        
+        # Flash a success message
+        flash("Thank you for subscribing to updates!")
+        
+    except Exception as e:
+        # Log the error with more detail
+        import traceback
+        print(f"Error sending email: {e}")
+        print(traceback.format_exc())
+        
+        # Flash an error message
+        flash("There was an error processing your subscription. Please try again.")
+    
+    # Redirect back to the campaign page
+    return redirect(url_for('campaign_detail', campaign_id=campaign_id, _anchor='updates-tab'))
+
+# Ends copy here
 @app.route('/create')
 def create():
     return render_template('create.html')
@@ -156,7 +230,7 @@ def create_campaign():
         filename = secure_filename(number_filename)
         path = IMAGES_FOLDER
         file.save(path + filename) # Save the file to the static/images directory
-    index_campaigns(get_campaigns(PICTURE_EXTENSIONS, IMAGES_FOLDER)) # Re-index the campaigns after adding a new one
+    index_campaigns(get_campaigns()) # Re-index the campaigns after adding a new one
     return render_template('create-submit.html', data=data)
 
 

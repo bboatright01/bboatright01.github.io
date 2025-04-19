@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Home</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/create.css') }}">
 </head>
 <body>
@@ -27,7 +27,8 @@
                     <h3>Patagonian Prosperity Plan</h3>
                     <p>Focused on the rural regions of southern Chile near Patagonia, this campaign seeks to address seasonal food shortages by developing sustainable greenhouse projects and modernizing traditional farming infrastructure.</p>
                     <a href="#" class="donate-button">Donate now</a>
-                    <a href="#" class="learn-more-button">Learn more</a>
+                    <a href="{{ url_for('contact') }}" class="learn-more-button">Learn more</a>
+
                 </div>
             </div>
             <div class="topic-card">
