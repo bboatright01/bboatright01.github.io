@@ -1,0 +1,47 @@
+<form method="POST">
+    {{ form.hidden_tag() }}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for category, message in messages %}
+            <li class="flash {{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <p>
+        {{ form.amount.label }}<br>
+        {{ form.amount(size=20) }}<br>
+        {% for error in form.amount.errors %}
+            <span class="error">{{ error }}</span>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.card_number.label }}<br>
+        {{ form.card_number(size=20) }}<br>
+        {% for error in form.card_number.errors %}
+            <span class="error">{{ error }}</span>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.exp_date.label }}<br>
+        {{ form.exp_date(size=20) }}<br>
+        {% for error in form.exp_date.errors %}
+            <span class="error">{{ error }}</span>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.cvv.label }}<br>
+        {{ form.cvv(size=20) }}<br>
+        {% for error in form.cvv.errors %}
+            <span class="error">{{ error }}</span>
+        {% endfor %}
+    </p>
+
+    <p>{{ form.submit() }}</p>
+</form>

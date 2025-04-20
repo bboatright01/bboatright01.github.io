@@ -1,6 +1,11 @@
 from os.path import isfile
+from datetime import datetime
+from flask_wtf import FlaskForm
+from wtforms import StringField, DecimalField, SubmitField
+from wtforms.validators import InputRequired, NumberRange, Regexp
 
 from app_factory import db
+
 
 class Donations(db.Model):
     __tablename__ = 'Donations'
@@ -9,7 +14,7 @@ class Donations(db.Model):
     DONOR_ID = db.Column(db.Integer, nullable=False)
     CAMPAIGN_ID = db.Column(db.Integer, nullable=False)
     Amount = db.Column(db.Numeric(15,2), nullable=False)
-    timestamp = db.Column(db.DateTime, server_default=db.func.now())
+    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def to_dict(self):
         return {
@@ -19,7 +24,28 @@ class Donations(db.Model):
             'Amount': self.Amount,
             'timestamp': self.timestamp,
         }
-    
+
+
+class DonationForm(FlaskForm):
+    amount = DecimalField('Amount (USD)', validators=[
+        InputRequired(),
+        NumberRange(min=1, message="Minimum donation is $1.")
+    ])
+    card_number = StringField('Card Number', validators=[
+        InputRequired(),
+        Regexp(r'^\d{13,19}$', message="Enter a valid card number.")
+    ])
+    exp_date = StringField('Expiration Date (MMYY)', validators=[
+        InputRequired(),
+        Regexp(r'^(0[1-9]|1[0-2])([0-9]{2})$', message="Use MMYY format.")
+    ])
+    cvv = StringField('CVV', validators=[
+        InputRequired(),
+        Regexp(r'^\d{3,4}$', message="Enter a valid CVV.")
+    ])
+    submit = SubmitField('Donate Now')
+
+
 def total_donated_for_campaign(campaign_id): 
     total_donated = db.session.query(db.func.sum(Donations.Amount)).filter(Donations.CAMPAIGN_ID == campaign_id).scalar()
     return total_donated if total_donated else 0.0
