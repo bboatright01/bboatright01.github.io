@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/create.css') }}">
+</head>
+<body>
+
+    {% include 'header.html' %}
+
+    {% include 'carousel.html' %}
+
+    <!-- The highlight banner with message -->
+    <div class="yellow-highlight">
+        <p>More than $10,000 is raised every week on Change 4 Change.</p>
+    </div>
+
+    <!-- The featured campaigns section with the detailed campaign cards -->
+    <section class="featured-topics">
+        <h3>Featured Campaigns</h3>
+        <div class="topics-container">
+            <div class="topic-card">
+                <img src="{{url_for('static', filename='images/' + '10.webp')}}" alt="Patagonian Prosperity Plan">
+                <div class="topic-info">
+                    <h3>Patagonian Prosperity Plan</h3>
+                    <p>Focused on the rural regions of southern Chile near Patagonia, this campaign seeks to address seasonal food shortages by developing sustainable greenhouse projects and modernizing traditional farming infrastructure.</p>
+                    <a href="#" class="donate-button">Donate now</a>
+                    <a href="#" class="learn-more-button">Learn more</a>
+                </div>
+            </div>
+            <div class="topic-card">
+                <img src="{{url_for('static', filename='images/' + '13.webp')}}" alt="Cambodian Community Living">
+                <div class="topic-info">
+                    <h3>Cambodian Community Living</h3>
+                    <p>In the rural provinces of Cambodia, many communities still lack access to secure housing and basic infrastructure. </p>
+                    <a href="#" class="donate-button">Donate now</a>
+                    <a href="#" class="learn-more-button">Learn more</a>
+                </div>
+            </div>
+            <div class="topic-card">
+                <img src="{{url_for('static', filename='images/' + '33.webp')}}" alt="Dar es Salaam DreamSafe">
+                <div class="topic-info">
+                    <h3>Dar es Salaam DreamSafe</h3>
+                    <p>Operating in Tanzania’s bustling Dar es Salaam region, this campaign addresses the rising risk of mosquito-borne diseases in densely populated urban centers.</p>
+                    <a href="#" class="donate-button">Donate now</a>
+                    <a href="#" class="learn-more-button">Learn more</a>
+                </div>
+            </div>
+            <div class="topic-card">
+                <img src="{{url_for('static', filename='images/' + '29.webp')}}" alt="Nuevo Amanecer Health Centers">
+                <div class="topic-info">
+                    <h3>Nuevo Amanecer Health Centers</h3>
+                    <p>This campaign targets underserved areas in Colombia’s Narińo region, where geographical isolation and limited healthcare infrastructure pose serious challenges.</p>
+                    <a href="#" class="donate-button">Donate now</a>
+                    <a href="#" class="learn-more-button">Learn more</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% include 'footer.html' %}
+
+    <!-- Calls the JS file for interactive functions -->
+    <script src="script.js"></script>
+    <script src="{{ url_for('static', filename='js/navigation-control.js') }}"></script>
+</body>
+</html>
