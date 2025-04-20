@@ -7,7 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from whoosh.qparser import QueryParser, MultifieldParser, OrGroup
 from whoosh.index import open_dir
 
-from login import User, Donor, NGO, load_user, RegisterForm, LoginForm, Subscription
+from login import Donor, NGO, load_user, RegisterForm, LoginForm, Subscription, get_ngo_by_id
 from search import index_campaigns
 from database import get_db_url, get_db_engine
 from campaigns import load_campaigns, load_campaigns_by_id, add_new_campaign, get_campaigns, augment_campaigns, Campaign

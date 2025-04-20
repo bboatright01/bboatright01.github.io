@@ -128,7 +128,7 @@
     {% include 'header.html' %}
 
     <div class="container">
-        <h1>Welcome, {{ user.username }}</h1>
+        <h1>Welcome, {{ user.name }}</h1>
         
         <!-- Tab buttons -->
         <div class="tabs">
@@ -143,7 +143,7 @@
                 <ul class="campaign-list">
                     {% for campaign in campaigns %}
                         <li>
-                            <strong>{{ campaign.Name }}</strong> – {{ campaign.status }}
+                            <strong><a href="{{ url_for('campaign', campaign_id=campaign['id']) }}">{{ campaign["Name"] }}</a></strong> – {{ campaign.status }}
                         </li>
                     {% else %}
                         <li>No campaigns yet.</li>
