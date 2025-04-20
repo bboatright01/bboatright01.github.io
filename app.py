@@ -11,6 +11,8 @@ from login import User, Donor, NGO, load_user, RegisterForm, LoginForm, Subscrip
 from search import index_campaigns
 from database import get_db_url, get_db_engine
 from campaigns import load_campaigns, load_campaigns_by_id, add_new_campaign, get_campaigns, augment_campaigns, Campaign
+from donations import count_donations_by_unique_id, total_donated_for_campaign
+from ngos import get_ngo_by_id
 from app_factory import app, db, engine
 
 
@@ -85,6 +87,17 @@ def carousel():
     # Pass the list of campaigns to the template, as well as the to_string function
     return render_template('carousel.html', campaigns=get_campaigns(), comma_num = to_string)
 
+@app.route('/campaigns/<int:campaign_id>')
+def campaign(campaign_id):
+    campaign = load_campaigns_by_id([{"id": campaign_id}])
+    campaign = augment_campaigns(campaign, PICTURE_EXTENSIONS, IMAGES_FOLDER)
+    donor_count = count_donations_by_unique_id(campaign[0]['id'])
+    total_donated = int(total_donated_for_campaign(campaign[0]['id']))
+    NGO_name = get_ngo_by_id(campaign[0]['NGO_ID'])['Name']
+    NGO_description = get_ngo_by_id(campaign[0]['NGO_ID'])['Description']
+    return render_template('contact.html', campaign=campaign[0], donor_count=donor_count,
+                            total_donated = total_donated, NGO_name=NGO_name, NGO_description=NGO_description)
+
 
 @app.route('/donor-login', methods=['GET', 'POST'])
 def donor_login():
@@ -152,7 +165,7 @@ def create_campaign():
         return 'Funding goal must be a number', 400
     new_campaign = add_new_campaign(data) # Add the new campaign to the database and return the entry
     if file:
-        number_filename = number_file(file.filename, new_campaign.lastrowid)
+        number_filename = number_file(file.filename, new_campaign.id)
         filename = secure_filename(number_filename)
         path = IMAGES_FOLDER
         file.save(path + filename) # Save the file to the static/images directory
