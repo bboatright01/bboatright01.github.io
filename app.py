@@ -343,10 +343,11 @@ def donate_to_campaign(campaign_id):
         trans_id = getattr(tr, 'transId', None)
         msg_result = getattr(getattr(response, 'messages', None), 'resultCode', None)
 
-        print("Response Code:", rc)
-        print("Transaction ID:", trans_id)
-        print("Error full response:", response.__dict__)
-        print("Messages resultCode:", msg_result)
+        ## for debugging
+        # print("Response Code:", rc)
+        # print("Transaction ID:", trans_id)
+        # print("Error full response:", response.__dict__)
+        # print("Messages resultCode:", msg_result)
 
         if str(msg_result).strip().lower() == 'ok' and str(rc).strip() == '1':
             from donations import Donations
