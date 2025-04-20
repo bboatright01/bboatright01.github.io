@@ -19,14 +19,23 @@
       {% endif %}
     {% endwith %}
     <div class="form-container">
-        <h1>NGO Login</h1>
-        <form method="POST">
-            {{ form.hidden_tag() }}
-            {{ form.username.label }} {{ form.username() }}<br>
-            {{ form.password.label }} {{ form.password() }}<br>
+      <h1>NGO Login</h1>
+      <form action="{{ url_for('ngo_login') }}" method="post" class="login-form">
+          {{ form.hidden_tag() }}
+  
+          <div class="form-box">
+              {{ form.username.label(class="field-descriptor") }}
+              {{ form.username(class="form-input") }}
           </div>
-            {{ form.submit() }}
-        </form>
+  
+          <div class="form-box">
+              {{ form.password.label(class="field-descriptor") }}
+              {{ form.password(class="form-input") }}
+          </div>
+          <div class="form-box">
+              {{ form.submit(class="submit-button") }}
+          </div>
+      </form>
     </div>
 
     {% include 'footer.html' %}
