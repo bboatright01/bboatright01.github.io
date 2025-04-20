@@ -1,0 +1,84 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+    width: 100%;
+    align-items: center;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+
+form h1{
+    font-family: monospace;
+    font-size: 36px;
+    text-align: center;
+}
+/* Sets spacing between form elements */
+.form-box {
+    /*display: grid;*/
+    /*place-items: center;*/
+    margin: 10px 10px;
+
+}
+/* Sets the width and height of the form input fields */
+.form-input {
+    height: 50px;
+    width: 500px;
+}
+/* Styles text input box and allows it to expand to fill space up to a max of 450px */
+input[type="text"]{
+    font-family: monospace;
+    font-size: 24px;
+    background-color: white;
+    border-radius: 5px;
+    flex: 1;
+    min-width: 0;
+    max-width: 450px;
+    padding: 10px;
+    box-sizing: border-box;
+    margin-right: 10px;
+}
+/* Styles the form submit button */
+.submit-button {
+    height: 50px;
+    max-width: 150px;
+    font-size: 24px;
+    font-family: monospace;
+    background-color: #4CAF50;
+    color: #feffea;
+    border: 2px solid #ccc;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 10px 15px;
+}
+/* Sets the font family, size, and weight of each field descriptor */
+.field-descriptor {
+    font-size: 24px;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+/* Style for the form */
+form {
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Aligns search box and button horizontally */
+.search-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
