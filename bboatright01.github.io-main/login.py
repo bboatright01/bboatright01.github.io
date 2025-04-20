@@ -6,14 +6,10 @@ from wtforms.validators import InputRequired, Length, Email, EqualTo
 
 from app_factory import app, db
 
-donor_login_manager = LoginManager()
-donor_login_manager.init_app(app)
-donor_login_manager.login_view = 'login'
-
-ngo_login_manager = LoginManager()
-ngo_login_manager.login_view = 'ngo_login'
-ngo_login_manager.init_app(app)
-
+# A single login manager
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'donor_login'  # Default to donor login view
 
 class User(UserMixin):
     def __init__(self, id, username, password):
@@ -29,6 +25,11 @@ class Donor(UserMixin, db.Model):
     password = db.Column(db.String(255), nullable=False)
     name = db.Column(db.String(255))
     subscriptions = db.relationship('Subscription', back_populates='donor', lazy=True)
+    
+    # Adds a type property to identify user type
+    @property
+    def type(self):
+        return 'donor'
 
 
 class NGO(UserMixin, db.Model):
@@ -38,6 +39,11 @@ class NGO(UserMixin, db.Model):
     name = db.Column(db.String(255), nullable=False)
     username = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    
+    # Adds a type property to identify user type
+    @property
+    def type(self):
+        return 'ngo'
 
 
 class Subscription(db.Model):
@@ -54,14 +60,16 @@ class Subscription(db.Model):
     )
 
 
-@ngo_login_manager.user_loader
-def load_ngo(user_id):
-    return NGO.query.get(int(user_id))
-
-
-@donor_login_manager.user_loader
+@login_manager.user_loader
 def load_user(user_id):
-    return Donor.query.get(int(user_id))
+    # Try to load as a Donor first
+    donor = Donor.query.get(int(user_id))
+    if donor:
+        return donor
+    
+    # If not a donor, try loading as an NGO
+    ngo = NGO.query.get(int(user_id))
+    return ngo
 
 
 class RegisterForm(FlaskForm):

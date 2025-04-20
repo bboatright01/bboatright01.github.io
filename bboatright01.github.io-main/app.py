@@ -230,6 +230,15 @@ def create_campaign():
 @app.route('/donor-registration', methods=['GET', 'POST'])
 def donor_registration():
     form = RegisterForm()
+    
+    if request.method == 'POST':
+        print("Form data submitted:", request.form)
+        if not form.validate():
+            print("Form validation failed with these errors:", form.errors)
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f"{field}: {error}", "danger")
+    
     if form.validate_on_submit():
         username = form.username.data
         password_hash = generate_password_hash(form.password.data)
@@ -239,7 +248,7 @@ def donor_registration():
         print("Username:", username)
 
         try:
-            # Check if username already exists
+            # Checks if username already exists
             if Donor.query.filter_by(username=username).first():
                 flash("Username already taken.", "danger")
             else:
@@ -282,7 +291,7 @@ def ngo_dashboard():
 # Main consolidated route for campaign details
 @app.route('/campaign/<int:campaign_id>')
 def campaign_detail(campaign_id):
-    # Try to get campaign data from the database using load_campaigns_by_id
+    # Tries to get campaign data from the database using load_campaigns_by_id
     campaign_data = load_campaigns_by_id([{"id": campaign_id}])
     
     if not campaign_data:
@@ -303,11 +312,11 @@ def campaign_detail(campaign_id):
         NGO_name = get_ngo_by_id(campaign['NGO_ID'])['Name']
         NGO_description = get_ngo_by_id(campaign['NGO_ID'])['Description']
     except:
-        # Default values if NGO info can't be retrieved
+        # The default values if NGO info can't be retrieved
         NGO_name = "Unknown Organization"
         NGO_description = "No description available."
     
-    # Check subscription status
+    # Checks subscription status
     is_subscribed = False
     if current_user.is_authenticated:
         is_subscribed = Subscription.query.filter_by(
