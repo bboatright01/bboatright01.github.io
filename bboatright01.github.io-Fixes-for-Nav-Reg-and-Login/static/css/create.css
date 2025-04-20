@@ -1,0 +1,125 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+    width: 100%;
+    align-items: center;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+/* Sets margins between top and bottom of form container, some internal padding, and the width */
+.form-container {
+    background-color: #feffea;
+    margin-top: 80px;
+    margin-bottom: 80px;
+    border: 1px solid black;
+    padding: 0px 40px;
+    max-width: 550px;
+}
+/* Sets the font family, size, and alignment of the form title */
+.form-container h1{
+    font-family: monospace;
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 35px;
+}
+/* Sets spacing between form elements */
+.form-box {
+    display: grid;
+    place-items: center;
+    margin: 20px 0;
+    row-gap: 20px;
+}
+/* Sets the width and height of the form input fields */
+.form-input {
+    width: 100%;
+    height: 40px;
+}
+/* Sets the font family and size for the form input text */
+input[type="text"]{
+    font-family: monospace;
+    font-size: 24px;
+    
+    background-color: white;
+    border-radius: 5px;
+}
+/* Sets the font family and size for the form input password */
+input[type="password"]{
+    font-family: monospace;
+    font-size: 24px;
+    
+    background-color: white;
+    border-radius: 5px;
+}
+/* Sets the height of the campaign description field and the font size */
+#campaign-description {
+    height: 200px;
+    font-size: 24px;
+    background-color: white;
+    border-radius: 5px;
+}
+/* Sets the width, height, font size, and font family of the form dropdowns */
+.campaign-select {
+    width: 100%;
+    height: 40px;
+    font-size: 24px;
+    font-family: monospace;
+    background-color: white;
+    border-radius: 5px;
+}
+/* Styles the form submit button */
+.submit-button {
+    width: 100%;
+    height: 65px;
+    font-size: 24px;
+    font-family: monospace;
+    background-color: #4CAF50;
+    color: #feffea;
+    border: 2px solid #ccc;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+}
+/* Sets the font family, size, and weight of each field descriptor */
+.field-descriptor {
+    font-size: 24px;
+    font-family: monospace;
+    font-weight: bold;
+}
+/* Hides the default file input */
+input[type="file"] { 
+    display: none;
+}
+/* Styles the custom file upload button */
+.custom-picture-upload {
+    width: 100%;
+    height: 50px;
+    border: 2px solid #ccc;
+    background-color: #feffea;
+    font-size: 24px;
+    font-family: monospace;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px 6px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.flash {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.flash.success { background-color: #d4edda; color: #155724; }
+.flash.info    { background-color: #d1ecf1; color: #0c5460; }
+.flash.warning { background-color: #fff3cd; color: #856404; }
+.flash.danger  { background-color: #f8d7da; color: #721c24; }
