@@ -94,7 +94,9 @@ def campaign(campaign_id):
     donor_count = count_donations_by_unique_id(campaign[0]['id'])
     total_donated = int(total_donated_for_campaign(campaign[0]['id']))
     NGO_name = get_ngo_by_id(campaign[0]['NGO_ID'])['Name']
-    return render_template('contact.html', campaign=campaign[0], donor_count=donor_count, total_donated = total_donated, NGO_name=NGO_name)
+    NGO_description = get_ngo_by_id(campaign[0]['NGO_ID'])['Description']
+    return render_template('contact.html', campaign=campaign[0], donor_count=donor_count,
+                            total_donated = total_donated, NGO_name=NGO_name, NGO_description=NGO_description)
 
 
 @app.route('/donor-login', methods=['GET', 'POST'])
