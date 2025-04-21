@@ -115,7 +115,8 @@ def campaign(campaign_id):
         donor_count=donor_count,
         total_donated=total_donated,
         NGO=NGO,
-        is_subscribed=is_subscribed
+        is_subscribed=is_subscribed,
+        comma_num = to_string
     )
 
 

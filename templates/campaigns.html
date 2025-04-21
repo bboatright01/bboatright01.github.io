@@ -287,9 +287,9 @@
                 
                 <div class="stats">
                     {% if donor_count > 1 %}
-                    <p>{{donor_count}} backers pledged ${{total_donated}} to help bring this project to life.</p>
+                    <p>{{donor_count}} backers pledged ${{comma_num(total_donated)}} to help bring this project to life.</p>
                     {% elif donor_count == 1 %}
-                    <p>{{donor_count}} backer pledged ${{total_donated}} to help bring this project to life.</p>
+                    <p>{{donor_count}} backer pledged ${{comma_num(total_donated)}} to help bring this project to life.</p>
                     {% elif donor_count == 0 %}
                     <p>Become the first backer and help bring this project to life!</p>
                     {% endif %}
