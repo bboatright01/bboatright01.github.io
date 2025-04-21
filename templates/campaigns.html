@@ -15,7 +15,7 @@
         
         .container {
             width: 80%;
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 20px;
             background-color: #feffea; /* Original color */
@@ -42,7 +42,7 @@
         
         .featured-image {
             width: 100%;
-            max-width: 600px;
+            max-width: 550px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             height: auto;
@@ -92,6 +92,8 @@
         .stats {
             margin-top: 20px;
             color: #555;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
         }
         
         .last-updated {
@@ -138,6 +140,11 @@
         
         .tab-content.active {
             display: block;
+        }
+
+        #creator-tab a {
+            color: #007bff; /* Original link color */
+            text-decoration: none;
         }
         
         /* Subscription form styling */
@@ -275,7 +282,7 @@
                 
                 <div class="creator-info">
                     <p>Created by</p>
-                    <p class="creator-name">{{NGO_name}}</p>
+                    <p class="creator-name">{{NGO.Name}}</p>
                 </div>
                 
                 <div class="stats">
@@ -286,10 +293,6 @@
                     {% elif donor_count == 0 %}
                     <p>Become the first backer and help bring this project to life!</p>
                     {% endif %}
-                </div>
-                
-                <div class="last-updated">
-                    <p>Last updated April 4, 2025</p>
                 </div>
             </div>
         </div>
@@ -320,7 +323,12 @@
         
         <div id="creator-tab" class="tab-content">
             <h2>Creator Profile</h2>
-            <p>{{NGO_description}}</p>
+            <h3>Description</h3>
+            <p>{{NGO.Description}}</p>
+            <h3>Email</h3>
+            <a href="mailto:{{NGO.Email}}">{{NGO.Email}}</a>
+            <h3>Address</h3>
+            <p>{{NGO.Address}}</p>
         </div>
 
         <div id="donate-tab" class="tab-content">

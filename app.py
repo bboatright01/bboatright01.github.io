@@ -100,8 +100,7 @@ def campaign(campaign_id):
     campaign = augment_campaigns(campaign, PICTURE_EXTENSIONS, IMAGES_FOLDER)
     donor_count = count_donations_by_unique_id(campaign[0]['id'])
     total_donated = int(total_donated_for_campaign(campaign[0]['id']))
-    NGO_name = get_ngo_by_id(campaign[0]['NGO_ID'])['Name']
-    NGO_description = get_ngo_by_id(campaign[0]['NGO_ID'])['Description']
+    NGO = get_ngo_by_id(campaign[0]['NGO_ID'])
 
     is_subscribed = False
     if current_user.is_authenticated:
@@ -115,8 +114,7 @@ def campaign(campaign_id):
         campaign=campaign[0],
         donor_count=donor_count,
         total_donated=total_donated,
-        NGO_name=NGO_name,
-        NGO_description=NGO_description,
+        NGO=NGO,
         is_subscribed=is_subscribed
     )
 
