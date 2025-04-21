@@ -392,7 +392,12 @@ def logout():
 
     flash("Logged out", "info")
     return redirect(url_for('home'))  # Or to donor-login, if you prefer
-
+    
+@app.route('/donate/<int:campaign_id>', methods=['GET', 'POST'], endpoint='donate_to_campaign')
+@login_required
+def donate_to_campaign(campaign_id):
+    campaign = Campaign.query.get_or_404(campaign_id)
+    return render_template('donate.html', campaign=campaign)
 
 if __name__ == '__main__':
     app.run(debug=True)
