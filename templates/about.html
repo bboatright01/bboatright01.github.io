@@ -9,11 +9,38 @@
 <body>
     {% include 'header.html' %}
 
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .campaign-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .campaign-list li {
+            margin-bottom: 10px;
+        }
+        .campaign-list a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+    </style>
     <div class="container">
-        <h1>About Us</h1>
-        <p>This is the About page. Here we can put some information about Change for Change, the project, or the team behind it.</p>
+        <h1>Our Mission</h1>
+        <h2>The Challenge</h2>
+        <p>There is a pressing need for basic infrastructure and community projects in
+            developing countries. NGOs often have the will and a presence on the ground
+            but lack the funding. Technology can help connect willing donors to NGOs that
+            are ready to utilize the funding for the biggest impact .</p>
+        <h2>Our Solution</h2>
+        <p>Change 4 Change is a crowdfunding website that leverages the power of cloud
+            computing to allow NGOs to propose funding campaigns and provide donors
+            the tools they need to make informed decisions on where to donate to make
+            the maximum impact in helping the world's poor.</p>
     </div>
-
+    
     {% include 'footer.html' %}
 <script src="{{ url_for('static', filename='js/navigation-control.js') }}"></script>
 </body>
