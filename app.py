@@ -14,7 +14,6 @@ from search import index_campaigns
 from database import get_db_url, get_db_engine
 from campaigns import load_campaigns, load_campaigns_by_id, add_new_campaign, get_campaigns, augment_campaigns, Campaign
 from donations import count_donations_by_unique_id, total_donated_for_campaign
-from ngos import get_ngo_by_id
 from app_factory import app, db, engine
 from datetime import datetime
 
@@ -84,11 +83,13 @@ def search():
             # return jsonify(search_results_ids)
     return render_template('search.html')
 
+
 # Route for the carousel page; template that enables dynamic display of campaign cards that can connect to database
 @app.route('/carousel') 
 def carousel():
     # Pass the list of campaigns to the template, as well as the to_string function
     return render_template('carousel.html', campaigns=get_campaigns(), comma_num = to_string)
+
 
 @app.route('/campaigns/<int:campaign_id>')
 def campaign(campaign_id):
@@ -107,7 +108,7 @@ def campaign(campaign_id):
         ).first() is not None
 
     return render_template(
-        'contact.html',
+        'campaigns.html',
         campaign=campaign[0],
         donor_count=donor_count,
         total_donated=total_donated,
@@ -115,6 +116,7 @@ def campaign(campaign_id):
         NGO_description=NGO_description,
         is_subscribed=is_subscribed
     )
+
 
 @app.route('/donor-login', methods=['GET', 'POST'])
 def donor_login():
@@ -134,7 +136,6 @@ def donor_login():
         flash("Invalid credentials", "danger")
 
     return render_template('donor-login.html', form=form)
-
 
 
 @app.route('/ngo-login', methods=['GET', 'POST'])
@@ -243,18 +244,7 @@ def ngo_dashboard():
 
     return render_template('ngo-dashboard.html', user=ngo, campaigns=campaigns)
 
-@app.route('/campaign/<int:campaign_id>')
-def campaign_detail(campaign_id):
-    campaign = Campaign.query.get_or_404(campaign_id)
 
-    is_subscribed = False
-    if current_user.is_authenticated:
-        is_subscribed = Subscription.query.filter_by(
-            donor_id=current_user.id,
-            campaign_id=campaign.id
-        ).first() is not None
-
-    return render_template('campaign-detail.html', campaign=campaign, is_subscribed=is_subscribed)
 def send_notification_email(user_id, username, campaign_id, campaign_name):
     print("Attempting to send email notification...")
     
@@ -311,6 +301,7 @@ def send_notification_email(user_id, username, campaign_id, campaign_name):
         print(f"Exception occurred while sending email: {e}")
         return False
 
+
 @app.route('/subscribe/<int:campaign_id>', methods=['POST'])
 @login_required
 def subscribe(campaign_id):
@@ -346,8 +337,6 @@ def subscribe(campaign_id):
     return redirect(url_for('campaign', campaign_id=campaign_id))
 
 
-
-
 @app.route('/unsubscribe/<int:campaign_id>', methods=['POST'])
 @login_required
 def unsubscribe(campaign_id):
@@ -372,19 +361,23 @@ def unsubscribe(campaign_id):
 def ngo_profile():
     return render_template('ngoprofile.html', user=current_user)
 
+
 @app.route('/postedcampaigns')
 @login_required
 def posted_campaigns():
     return render_template('postedcampaigns.html', user=current_user, campaigns=get_campaigns())
+
 
 @app.route('/donations')
 @login_required
 def donations():
     return render_template('donations.html', user=current_user, campaigns=get_campaigns())
 
+
 @app.route('/donate')
 def donate():
     return render_template('donate.html')
+
 
 @app.route('/logout')
 def logout():
