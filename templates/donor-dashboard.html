@@ -110,14 +110,6 @@
             padding: 0;
         }
         
-        .campaign-list li {
-            padding: 15px;
-            margin-bottom: 10px;
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
         .dashboard-section {
             margin-bottom: 30px;
         }
@@ -125,7 +117,7 @@
         /* Subscription indicator */
         .status-badge {
             display: inline-block;
-            padding: 3px 8px;
+            padding: 8px 15px;
             border-radius: 12px;
             font-size: 12px;
             font-weight: bold;
@@ -171,6 +163,51 @@
             border-radius: 12px;
             font-size: 12px;
         }
+
+        .campaign-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #ffffff80;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .campaign-info {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin: 5px 15px;
+        }
+
+        .campaign-info strong {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .btn-details {
+            background-color: #4285f4;
+            color: white;
+            padding: 12px 22px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .btn-unsubscribe {
+            background-color: #ff5252;
+            color: white;
+            padding: 12px 22px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -193,10 +230,12 @@
                 <h2>Your Subscribed Campaigns</h2>
                 <ul class="campaign-list">
                     {% for campaign in campaigns %}
-                        <li>
-                            <strong>{{ campaign.Name }}</strong>
-                            <span class="status-badge">Subscribed</span>
-                            <div>
+                        <li class="campaign-item">
+                            <div class="campaign-info">
+                                <strong>{{ campaign.Name }}</strong>
+                                <span class="status-badge">Subscribed</span>
+                                </div>
+                            <div class="campaign-info">
                                 <a href="{{ url_for('campaign', campaign_id=campaign.id) }}" class="btn-details">View Details</a>
                                 <form action="{{ url_for('unsubscribe', campaign_id=campaign.id) }}" method="post" style="display: inline;">
                                     <button type="submit" class="btn-unsubscribe">Unsubscribe</button>
