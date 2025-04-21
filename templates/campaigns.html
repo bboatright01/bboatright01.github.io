@@ -91,7 +91,6 @@
         
         .stats {
             margin-top: 20px;
-            color: #555;
             padding-bottom: 10px;
             border-bottom: 1px solid #ddd;
         }
@@ -284,14 +283,22 @@
                     <p>Created by</p>
                     <p class="creator-name">{{NGO.Name}}</p>
                 </div>
+
+                
                 
                 <div class="stats">
+                    <p>Funding Goal: ${{comma_num(funding_goal)}}</p>
+
                     {% if donor_count > 1 %}
                     <p>{{donor_count}} backers pledged ${{comma_num(total_donated)}} to help bring this project to life.</p>
                     {% elif donor_count == 1 %}
                     <p>{{donor_count}} backer pledged ${{comma_num(total_donated)}} to help bring this project to life.</p>
                     {% elif donor_count == 0 %}
                     <p>Become the first backer and help bring this project to life!</p>
+                    {% endif %}
+
+                    {% if campaign.Raised >= funding_goal %}
+                    <p>Funding Goal Met!</p>
                     {% endif %}
                 </div>
             </div>

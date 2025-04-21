@@ -417,6 +417,12 @@ footer {
     cursor: pointer;
 }
 
+.progress-text {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
 /* Large screens up to 1200px */
 @media (max-width: 1200px) {
     /* Adjusts the padding for better spacing on smaller screens */

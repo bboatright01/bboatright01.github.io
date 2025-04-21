@@ -100,6 +100,7 @@ def campaign(campaign_id):
     campaign = augment_campaigns(campaign, PICTURE_EXTENSIONS, IMAGES_FOLDER)
     donor_count = count_donations_by_unique_id(campaign[0]['id'])
     total_donated = int(total_donated_for_campaign(campaign[0]['id']))
+    funding_goal = int(campaign[0]['Funding_Goal'])
     NGO = get_ngo_by_id(campaign[0]['NGO_ID'])
 
     is_subscribed = False
@@ -116,6 +117,7 @@ def campaign(campaign_id):
         total_donated=total_donated,
         NGO=NGO,
         is_subscribed=is_subscribed,
+        funding_goal=funding_goal,
         comma_num = to_string
     )
 
