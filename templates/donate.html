@@ -11,7 +11,11 @@
 
     <div class="container">
         <h1>Donate</h1>
-        <p>Below is a list of all our current campaigns. You will need to register as a donor and log in to make a donation.</p>
+        {% if current_user.is_authenticated %}
+            <p>Below is a list of all our current campaigns. You can donate to any of them, or subscribe for updates.</p>
+        {% else %}
+            <p>Below is a list of all our current campaigns. You will need to register as a donor and log in to make a donation.</p>
+        {% endif %}
         <ul class="campaign-list">
             {% for campaign in campaigns %}
                 <li>

@@ -382,6 +382,7 @@ def logout():
 @app.route('/donate/<int:campaign_id>', methods=['GET', 'POST'])
 @login_required
 def donate_to_campaign(campaign_id):
+    session.pop('_flashes', None)
     form = DonationForm()
 
     if form.validate_on_submit():

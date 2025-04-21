@@ -10,6 +10,19 @@
 
     {% include 'header.html' %}
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for category, message in messages %}
+            <li class="flash {{ category }}">
+              {{ message }}
+              <button onclick="this.parentElement.style.display='none'">×</button>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
     <div class="form-container">
         <h1>User Login</h1>
         <form action="{{ url_for('donor_login') }}" method="post" class="login-form">
