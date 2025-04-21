@@ -121,56 +121,6 @@
         .dashboard-section {
             margin-bottom: 30px;
         }
-        
-        /* Subscription indicator */
-        .status-badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-left: 10px;
-            background-color: #4CAF50;
-            color: white;
-        }
-        
-        /* Payment section */
-        .payment-section {
-            background-color: white;
-            border-radius: 5px;
-            padding: 15px;
-            margin-top: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .payment-method {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        
-        .payment-method.active {
-            border-color: #4CAF50;
-            background-color: #f1fff2;
-        }
-        
-        .payment-icon {
-            width: 40px;
-            height: 40px;
-            margin-right: 15px;
-        }
-        
-        .default-badge {
-            margin-left: auto;
-            background-color: #4CAF50;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-        }
     </style>
 </head>
 <body>
@@ -184,27 +134,19 @@
         <div class="tabs">
             <button class="tab-button active" onclick="openTab(event, 'dashboard-tab')">Dashboard</button>
             <button class="tab-button" onclick="openTab(event, 'profile-tab')">Profile</button>
-            <button class="tab-button" onclick="openTab(event, 'payment-tab')">Payment Methods</button>
         </div>
         
         <!-- Dashboard Tab -->
         <div id="dashboard-tab" class="tab-content active">
             <div class="dashboard-section">
-                <h2>Your Subscribed Campaigns</h2>
+                <h2>Your Campaigns</h2>
                 <ul class="campaign-list">
                     {% for campaign in campaigns %}
                         <li>
-                            <strong>{{ campaign.Name }}</strong>
-                            <span class="status-badge">Subscribed</span>
-                            <div>
-                                <a href="{{ url_for('campaign_detail', campaign_id=campaign.id) }}" class="btn-details">View Details</a>
-                                <form action="{{ url_for('unsubscribe', campaign_id=campaign.id) }}" method="post" style="display: inline;">
-                                    <button type="submit" class="btn-unsubscribe">Unsubscribe</button>
-                                </form>
-                            </div>
+                            <strong><a href="{{ url_for('campaign', campaign_id=campaign['id']) }}">{{ campaign["Name"] }}</a></strong> – {{ campaign.status }}
                         </li>
                     {% else %}
-                        <li>No subscribed campaigns yet. <a href="{{ url_for('home') }}">Explore campaigns</a> to get started!</li>
+                        <li>No campaigns yet.</li>
                     {% endfor %}
                 </ul>
             </div>
@@ -213,28 +155,37 @@
         <!-- Profile Tab -->
         <div id="profile-tab" class="tab-content">
             <div class="profile-container">
-                <form id="profile-form" action="/update-donor-profile" method="post">
+                <form id="profile-form">
                     <!-- Name Section -->
                     <div class="profile-section">
                         <h3>Name</h3>
                         <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" id="name" name="name" value="{{ user.name }}">
+                            <label for="first-name">First Name</label>
+                            <input type="text" id="first-name" name="first-name" value="John">
+                        </div>
+                        <div class="form-group">
+                            <label for="last-name">Last Name</label>
+                            <input type="text" id="last-name" name="last-name" value="Doe">
                         </div>
                     </div>
+                    <div class="profile-section">
+                        <h3>NGO Name</h3>
+                        <div class="form-group">
+                            <label for="first-name">NGO Name</label>
+                            <input type="text" id="ngo-name" name="ngo-name" value="{{ user.username }}">
+                        </div>
+                        </div>
                     
-
                     <!-- Email Section -->
                     <div class="profile-section">
                         <h3>Email</h3>
                         <div class="form-group">
                             <label for="email">Email Address</label>
-                            <input type="email" id="email" name="email" value="{{ user.Email or '' }}">
-                            {% if not user.Email %}
+                            <input type="email" id="email" name="email" value="johndoe@example.com">
                             <div class="unverified">
-                                No email set
+                                Unverified
+                                <a href="#" class="resend-link">Resend verification email</a>
                             </div>
-                            {% endif %}
                         </div>
                     </div>
                     
@@ -242,20 +193,52 @@
                     <div class="profile-section">
                         <h3>Address</h3>
                         <div class="form-group">
+                            <label for="street">Street Address</label>
+                            <input type="text" id="street" name="street" value="123 Main St">
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" name="city" value="San Francisco">
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State/Province</label>
+                            <input type="text" id="state" name="state" value="CA">
+                        </div>
+                        <div class="form-group">
+                            <label for="zip">Postal Code</label>
+                            <input type="text" id="zip" name="zip" value="94103">
+                        </div>
+                        <div class="form-group">
                             <label for="country">Country</label>
-                            <input type="text" id="country" name="country" value="{{ user.Country or '' }}">
+                            <select id="country" name="country">
+                                <option value="US" selected>United States</option>
+                                <option value="CA">Canada</option>
+                                <option value="UK">United Kingdom</option>
+                                <option value="AU">Australia</option>
+                                <option value="Other">Other</option>
+                            </select>
                         </div>
                     </div>
                     
-                    <!-- Username Section -->
+                    <!-- Payment Method Section -->
                     <div class="profile-section">
-                        <h3>Username</h3>
+                        <h3>Payment Method</h3>
                         <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" id="username" name="username" value="{{ user.username }}" readonly>
-                            <div class="unverified">
-                                Username cannot be changed
-                            </div>
+                            <label for="card-type">Card Type</label>
+                            <select id="card-type" name="card-type">
+                                <option value="visa" selected>Visa</option>
+                                <option value="mastercard">Mastercard</option>
+                                <option value="amex">American Express</option>
+                                <option value="discover">Discover</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="card-number">Card Number</label>
+                            <input type="text" id="card-number" name="card-number" value="**** **** **** 4321">
+                        </div>
+                        <div class="form-group">
+                            <label for="expiry">Expiration Date</label>
+                            <input type="text" id="expiry" name="expiry" value="09/25">
                         </div>
                     </div>
                     
@@ -284,34 +267,6 @@
                     
                     <button type="submit" class="btn-save">Save Changes</button>
                 </form>
-            </div>
-        </div>
-        
-        <!-- Payment Methods Tab -->
-        <div id="payment-tab" class="tab-content">
-            <div class="dashboard-section">
-                <h2>Your Payment Methods</h2>
-                <div class="payment-section">
-                    <div class="payment-method active">
-                        <img src="{{ url_for('static', filename='images/visa.png') }}" alt="Visa" class="payment-icon">
-                        <div>
-                            <strong>Visa ending in 4242</strong>
-                            <div>Expires 12/25</div>
-                        </div>
-                        <span class="default-badge">Default</span>
-                    </div>
-                    
-                    <div class="payment-method">
-                        <img src="{{ url_for('static', filename='images/mastercard.png') }}" alt="Mastercard" class="payment-icon">
-                        <div>
-                            <strong>Mastercard ending in 8888</strong>
-                            <div>Expires 09/24</div>
-                        </div>
-                        <button class="btn-set-default">Set as default</button>
-                    </div>
-                    
-                    <button class="btn-save" style="margin-top: 15px;">Add New Payment Method</button>
-                </div>
             </div>
         </div>
     </div>
@@ -363,34 +318,10 @@
             const profileForm = document.getElementById('profile-form');
             if (profileForm) {
                 profileForm.addEventListener('submit', function(event) {
-                    // Add form validation here if needed
+                    event.preventDefault();
+                    alert('Profile information updated successfully!');
                 });
             }
-            
-            // Payment method toggle
-            const defaultButtons = document.querySelectorAll('.btn-set-default');
-            defaultButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remove active class from all payment methods
-                    document.querySelectorAll('.payment-method').forEach(method => {
-                        method.classList.remove('active');
-                    });
-                    
-                    // Add active class to parent payment method
-                    this.closest('.payment-method').classList.add('active');
-                    
-                    // Update badges
-                    document.querySelectorAll('.default-badge').forEach(badge => {
-                        badge.remove();
-                    });
-                    
-                    const newBadge = document.createElement('span');
-                    newBadge.className = 'default-badge';
-                    newBadge.textContent = 'Default';
-                    this.parentNode.appendChild(newBadge);
-                    this.remove();
-                });
-            });
         });
     </script>
     
