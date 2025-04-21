@@ -1,3 +1,6 @@
+import os
+from authorizenet import apicontractsv1
+from authorizenet.apicontrollers import createTransactionController
 from flask import Flask, render_template, request, redirect, flash, url_for, jsonify, session
 import json
 import requests
@@ -13,7 +16,7 @@ from login import Donor, NGO, load_user, RegisterForm, LoginForm, Subscription, 
 from search import index_campaigns
 from database import get_db_url, get_db_engine
 from campaigns import load_campaigns, load_campaigns_by_id, add_new_campaign, get_campaigns, augment_campaigns, Campaign
-from donations import count_donations_by_unique_id, total_donated_for_campaign
+from donations import count_donations_by_unique_id, total_donated_for_campaign, DonationForm
 from app_factory import app, db, engine
 from datetime import datetime
 
@@ -227,7 +230,6 @@ def donor_registration():
 def donor_dashboard():
     subscription_campaign_ids = [s.campaign_id for s in Subscription.query.filter_by(donor_id=current_user.id).all()]
     campaigns = Campaign.query.filter(Campaign.id.in_(subscription_campaign_ids)).all()
-    campaigns = campaigns = Campaign.query.filter(Campaign.id.in_(subscription_campaign_ids)).all()
     return render_template('donor-dashboard.html', user=current_user, campaigns=campaigns)
 
 
@@ -356,27 +358,10 @@ def unsubscribe(campaign_id):
 
 
 # Navigation for website
-@app.route('/ngoprofile')
-@login_required
-def ngo_profile():
-    return render_template('ngoprofile.html', user=current_user)
-
-
-@app.route('/postedcampaigns')
-@login_required
-def posted_campaigns():
-    return render_template('postedcampaigns.html', user=current_user, campaigns=get_campaigns())
-
-
-@app.route('/donations')
-@login_required
-def donations():
-    return render_template('donations.html', user=current_user, campaigns=get_campaigns())
-
-
 @app.route('/donate')
 def donate():
-    return render_template('donate.html')
+    campaigns = Campaign.query.all()
+    return render_template('donate.html', campaigns=get_campaigns(PICTURE_EXTENSIONS, IMAGES_FOLDER))
 
 
 @app.route('/logout')
@@ -392,12 +377,85 @@ def logout():
 
     flash("Logged out", "info")
     return redirect(url_for('home'))  # Or to donor-login, if you prefer
-    
-@app.route('/donate/<int:campaign_id>', methods=['GET', 'POST'], endpoint='donate_to_campaign')
+
+
+@app.route('/donate/<int:campaign_id>', methods=['GET', 'POST'])
 @login_required
 def donate_to_campaign(campaign_id):
-    campaign = Campaign.query.get_or_404(campaign_id)
-    return render_template('donate.html', campaign=campaign)
+    form = DonationForm()
+
+    if form.validate_on_submit():
+        amount = float(form.amount.data)
+
+        merchantAuth = apicontractsv1.merchantAuthenticationType()
+        merchantAuth.name = os.getenv("AUTH_NET_API_LOGIN_ID")
+        merchantAuth.transactionKey = os.getenv("AUTH_NET_TRANSACTION_KEY")
+
+        creditCard = apicontractsv1.creditCardType()
+        creditCard.cardNumber = form.card_number.data
+        creditCard.expirationDate = form.exp_date.data
+        creditCard.cardCode = form.cvv.data
+
+        payment = apicontractsv1.paymentType()
+        payment.creditCard = creditCard
+
+        transactionRequest = apicontractsv1.transactionRequestType()
+        transactionRequest.transactionType = "authCaptureTransaction"
+        transactionRequest.amount = amount
+        transactionRequest.payment = payment
+
+        createRequest = apicontractsv1.createTransactionRequest()
+        createRequest.merchantAuthentication = merchantAuth
+        createRequest.transactionRequest = transactionRequest
+
+        controller = createTransactionController(createRequest)
+        controller.execute()
+        response = controller.getresponse()
+
+        # Access XML fields safely
+        tr = getattr(response, 'transactionResponse', None)
+        rc = getattr(tr, 'responseCode', None)
+        trans_id = getattr(tr, 'transId', None)
+        msg_result = getattr(getattr(response, 'messages', None), 'resultCode', None)
+
+        ## for debugging
+        # print("Response Code:", rc)
+        # print("Transaction ID:", trans_id)
+        # print("Error full response:", response.__dict__)
+        # print("Messages resultCode:", msg_result)
+
+        if str(msg_result).strip().lower() == 'ok' and str(rc).strip() == '1':
+            from donations import Donations
+            donation = Donations(
+                DONOR_ID=current_user.id,
+                CAMPAIGN_ID=campaign_id,
+                Amount=amount,
+                timestamp=datetime.utcnow()
+            )
+            db.session.add(donation)
+            db.session.commit()
+
+            flash("Thank you for your donation!", "success")
+            return redirect(url_for('donation_success'))
+        else:
+            # Only runs if the condition above was not true
+            error_msg = "Unknown error"
+            if tr is not None and hasattr(tr, 'errors'):
+                error_msg = tr.errors.error[0].errorText
+            elif hasattr(response, 'messages') and hasattr(response.messages, 'message'):
+                error_msg = response.messages.message[0].text
+
+            print("Donation failed:", error_msg)
+            flash(f"Payment failed: {error_msg}", "danger")
+
+    return render_template('donation-form.html', form=form, campaign_id=campaign_id)
+
+
+@app.route('/donation-success')
+@login_required
+def donation_success():
+    return render_template('donation-success.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

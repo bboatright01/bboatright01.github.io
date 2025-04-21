@@ -197,7 +197,7 @@
                             <strong>{{ campaign.Name }}</strong>
                             <span class="status-badge">Subscribed</span>
                             <div>
-                                <a href="{{ url_for('campaign_detail', campaign_id=campaign.id) }}" class="btn-details">View Details</a>
+                                <a href="{{ url_for('campaign', campaign_id=campaign.id) }}" class="btn-details">View Details</a>
                                 <form action="{{ url_for('unsubscribe', campaign_id=campaign.id) }}" method="post" style="display: inline;">
                                     <button type="submit" class="btn-unsubscribe">Unsubscribe</button>
                                 </form>
