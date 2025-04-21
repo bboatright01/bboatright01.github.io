@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, redirect, flash, url_for, jsonify, session
+import json
+import requests
 from werkzeug.utils import secure_filename
 from functools import wraps
 from os.path import join, dirname, realpath, isfile
@@ -7,13 +9,14 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from whoosh.qparser import QueryParser, MultifieldParser, OrGroup
 from whoosh.index import open_dir
 
-from login import User, Donor, NGO, load_user, RegisterForm, LoginForm, Subscription
+from login import Donor, NGO, load_user, RegisterForm, LoginForm, Subscription, get_ngo_by_id
 from search import index_campaigns
 from database import get_db_url, get_db_engine
 from campaigns import load_campaigns, load_campaigns_by_id, add_new_campaign, get_campaigns, augment_campaigns, Campaign
 from donations import count_donations_by_unique_id, total_donated_for_campaign
 from ngos import get_ngo_by_id
 from app_factory import app, db, engine
+from datetime import datetime
 
 
 PICTURE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
@@ -95,9 +98,23 @@ def campaign(campaign_id):
     total_donated = int(total_donated_for_campaign(campaign[0]['id']))
     NGO_name = get_ngo_by_id(campaign[0]['NGO_ID'])['Name']
     NGO_description = get_ngo_by_id(campaign[0]['NGO_ID'])['Description']
-    return render_template('contact.html', campaign=campaign[0], donor_count=donor_count,
-                            total_donated = total_donated, NGO_name=NGO_name, NGO_description=NGO_description)
 
+    is_subscribed = False
+    if current_user.is_authenticated:
+        is_subscribed = Subscription.query.filter_by(
+            donor_id=current_user.id,
+            campaign_id=campaign[0]['id']
+        ).first() is not None
+
+    return render_template(
+        'contact.html',
+        campaign=campaign[0],
+        donor_count=donor_count,
+        total_donated=total_donated,
+        NGO_name=NGO_name,
+        NGO_description=NGO_description,
+        is_subscribed=is_subscribed
+    )
 
 @app.route('/donor-login', methods=['GET', 'POST'])
 def donor_login():
@@ -226,7 +243,6 @@ def ngo_dashboard():
 
     return render_template('ngo-dashboard.html', user=ngo, campaigns=campaigns)
 
-
 @app.route('/campaign/<int:campaign_id>')
 def campaign_detail(campaign_id):
     campaign = Campaign.query.get_or_404(campaign_id)
@@ -239,7 +255,61 @@ def campaign_detail(campaign_id):
         ).first() is not None
 
     return render_template('campaign-detail.html', campaign=campaign, is_subscribed=is_subscribed)
-
+def send_notification_email(user_id, username, campaign_id, campaign_name):
+    print("Attempting to send email notification...")
+    
+    # Mailtrap Sandbox API endpoint and bearer token
+    url = "https://sandbox.api.mailtrap.io/api/send/3630609"
+    bearer_token = "e943c36f37910e9933bd7aea9785d3e1"
+    
+    # Prepare the email payload
+    payload = {
+        "from": {
+            "email": "changechange743@gmail.com",
+            "name": "Change4Change"
+        },
+        "to": [
+            {"email": "changechange743@gmail.com"}
+        ],
+        "subject": "New Campaign Subscription Alert",
+        "text": f"""
+        New Subscription Alert!
+        
+        User {username} (ID: {user_id}) has subscribed to campaign '{campaign_name}' (ID: {campaign_id}).
+        
+        Subscription Time: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')}
+        
+        This is an automated message from Change 4 Change platform.
+        """,
+        "category": "Subscription Notification"
+    }
+    
+    # Prepare headers with the bearer token
+    headers = {
+        "Authorization": f"Bearer {bearer_token}",
+        "Content-Type": "application/json"
+    }
+    
+    try:
+        print("Sending request to Mailtrap API...")
+        print(f"URL: {url}")
+        print(f"Headers: {headers}")
+        print(f"Payload: {json.dumps(payload)}")
+        
+        response = requests.post(url, headers=headers, data=json.dumps(payload))
+        
+        print(f"Response status code: {response.status_code}")
+        print(f"Response body: {response.text}")
+        
+        if response.status_code == 200:
+            print("Email notification sent successfully to Mailtrap!")
+            return True
+        else:
+            print(f"Failed to send email: {response.status_code} - {response.text}")
+            return False
+    except Exception as e:
+        print(f"Exception occurred while sending email: {e}")
+        return False
 
 @app.route('/subscribe/<int:campaign_id>', methods=['POST'])
 @login_required
@@ -254,10 +324,27 @@ def subscribe(campaign_id):
         db.session.add(new_sub)
         db.session.commit()
         flash("You are now subscribed!", "success")
+        
+        # Get campaign details for the email
+        campaign_data = load_campaigns_by_id([{"id": campaign_id}])
+        if campaign_data:
+            campaign_name = campaign_data[0]['Name']
+        else:
+            campaign = Campaign.query.get_or_404(campaign_id)
+            campaign_name = campaign.Name
+        
+        # Send email notification
+        send_notification_email(
+            current_user.id, 
+            current_user.username, 
+            campaign_id, 
+            campaign_name
+        )
     else:
         flash("You're already subscribed.", "info")
 
-    return redirect(url_for('campaign_detail', campaign_id=campaign_id))
+    return redirect(url_for('campaign', campaign_id=campaign_id))
+
 
 
 
@@ -276,7 +363,8 @@ def unsubscribe(campaign_id):
     else:
         flash("You're not subscribed to this campaign.", "warning")
 
-    return redirect(url_for('campaign_detail', campaign_id=campaign_id))
+    return redirect(url_for('campaign', campaign_id=campaign_id))
+
 
 # Navigation for website
 @app.route('/ngoprofile')

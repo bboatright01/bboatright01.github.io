@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>New Donor Registration</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/create.css') }}">
 </head>
 <body>
@@ -11,27 +11,42 @@
     {% include 'header.html' %}
 
     <div class="form-container">
-        <h1>User Login</h1>
-        <form action="{{ url_for('donor_login') }}" method="post" class="login-form">
-            {{ form.hidden_tag() }}
-    
+        <h1>Create an Account</h1>
+        <form action="{{ url_for('donor_registration') }}" method="post" class="registration-form">
+            {{ form.hidden_tag() }}  <!-- Adds CSRF token -->
+
             <div class="form-box">
                 {{ form.username.label(class="field-descriptor") }}
                 {{ form.username(class="form-input") }}
             </div>
-    
+
+            <div class="form-box">
+                {{ form.name.label(class="field-descriptor") }}
+                {{ form.name(class="form-input") }}
+            </div>
+
+            <div class="form-box">
+                {{ form.email.label(class="field-descriptor") }}
+                {{ form.email(class="form-input") }}
+            </div>
+
             <div class="form-box">
                 {{ form.password.label(class="field-descriptor") }}
                 {{ form.password(class="form-input") }}
             </div>
+
+            <div class="form-box">
+                {{ form.confirm_password.label(class="field-descriptor") }}
+                {{ form.confirm_password(class="form-input") }}
+            </div>
+
             <div class="form-box">
                 {{ form.submit(class="submit-button") }}
             </div>
         </form>
     </div>
-    
 
     {% include 'footer.html' %}
-<script src="{{ url_for('static', filename='js/navigation-control.js') }}"></script>
+
 </body>
 </html>

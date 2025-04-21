@@ -10,16 +10,9 @@ donor_login_manager = LoginManager()
 donor_login_manager.init_app(app)
 donor_login_manager.login_view = 'login'
 
-ngo_login_manager = LoginManager()
-ngo_login_manager.login_view = 'ngo_login'
-ngo_login_manager.init_app(app)
-
-
-class User(UserMixin):
-    def __init__(self, id, username, password):
-        self.id = id
-        self.username = username
-        self.password = password
+# ngo_login_manager = LoginManager()
+# ngo_login_manager.login_view = 'ngo_login'
+# ngo_login_manager.init_app(app)
 
 
 class Donor(UserMixin, db.Model):
@@ -35,9 +28,28 @@ class NGO(UserMixin, db.Model):
     __tablename__ = 'NGOs'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=False)
-    username = db.Column(db.String(255), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.String(128))
+    description = db.Column(db.Text)
+    username = db.Column(db.String(150), nullable=False, unique=True)
+    password = db.Column(db.String(256), nullable=False)
+    email = db.Column(db.String(64))
+    address = db.Column(db.String(256))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'Name': self.name,
+            'Description': self.description,
+            'username': self.username,
+            'password': self.password,
+            'Email': self.email,
+            'Address': self.address
+        }
+
+
+def get_ngo_by_id(ngo_id):
+    ngo = NGO.query.filter(NGO.id == ngo_id).first()
+    return ngo.to_dict() if ngo else None
 
 
 class Subscription(db.Model):
@@ -54,9 +66,9 @@ class Subscription(db.Model):
     )
 
 
-@ngo_login_manager.user_loader
-def load_ngo(user_id):
-    return NGO.query.get(int(user_id))
+# @ngo_login_manager.user_loader
+# def load_ngo(user_id):
+#     return NGO.query.get(int(user_id))
 
 
 @donor_login_manager.user_loader
