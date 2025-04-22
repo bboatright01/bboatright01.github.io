@@ -34,6 +34,11 @@ def load_campaigns_by_id(campaign_ids):
     return [campaign.to_dict() for campaign in campaigns]
 
 
+def load_campaign_by_id(campaign_id):
+    campaign = Campaign.query.filter(Campaign.id == campaign_id).first()
+    return campaign
+
+
 def add_new_campaign(data):
     new_campaign = Campaign(
         Name=data['campaign-name'],

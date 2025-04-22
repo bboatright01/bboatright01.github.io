@@ -26,7 +26,11 @@
                 <div class="topic-info">
                     <h3>Patagonian Prosperity Plan</h3>
                     <p>Focused on the rural regions of southern Chile near Patagonia, this campaign seeks to address seasonal food shortages by developing sustainable greenhouse projects and modernizing traditional farming infrastructure.</p>
-                    <a href="#" class="donate-button">Donate now</a>
+                    {% if current_user.is_authenticated %}
+                        <a href="/donate/10" class="donate-button">Donate now</a>
+                    {% else %}
+                        <a href="/donor-login" class="donate-button" style="background-color:rgb(128,128,128)">Log in to donate</a>
+                    {% endif %}
                     <a href="/campaigns/10" class="learn-more-button">Learn more</a>
                 </div>
             </div>
@@ -35,7 +39,11 @@
                 <div class="topic-info">
                     <h3>Cambodian Community Living</h3>
                     <p>In the rural provinces of Cambodia, many communities still lack access to secure housing and basic infrastructure. </p>
-                    <a href="#" class="donate-button">Donate now</a>
+                    {% if current_user.is_authenticated %}
+                        <a href="/donate/13" class="donate-button">Donate now</a>
+                    {% else %}
+                        <a href="/donor-login" class="donate-button" style="background-color:rgb(128,128,128)">Log in to donate</a>
+                    {% endif %}
                     <a href="/campaigns/13" class="learn-more-button">Learn more</a>
                 </div>
             </div>
@@ -44,7 +52,11 @@
                 <div class="topic-info">
                     <h3>Dar es Salaam DreamSafe</h3>
                     <p>Operating in Tanzania’s bustling Dar es Salaam region, this campaign addresses the rising risk of mosquito-borne diseases in densely populated urban centers.</p>
-                    <a href="#" class="donate-button">Donate now</a>
+                    {% if current_user.is_authenticated %}
+                        <a href="/donate/33" class="donate-button">Donate now</a>
+                    {% else %}
+                        <a href="/donor-login" class="donate-button" style="background-color:rgb(128,128,128)">Log in to donate</a>
+                    {% endif %}
                     <a href="/campaigns/33" class="learn-more-button">Learn more</a>
                 </div>
             </div>
@@ -53,7 +65,11 @@
                 <div class="topic-info">
                     <h3>Nuevo Amanecer Health Centers</h3>
                     <p>This campaign targets underserved areas in Colombia’s Narińo region, where geographical isolation and limited healthcare infrastructure pose serious challenges.</p>
-                    <a href="#" class="donate-button">Donate now</a>
+                    {% if current_user.is_authenticated %}
+                        <a href="/donate/29" class="donate-button">Donate now</a>
+                    {% else %}
+                        <a href="/donor-login" class="donate-button" style="background-color:rgb(128,128,128)">Log in to donate</a>
+                    {% endif %}
                     <a href="/campaigns/29" class="learn-more-button">Learn more</a>
                 </div>
             </div>

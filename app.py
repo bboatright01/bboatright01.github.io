@@ -15,7 +15,7 @@ from whoosh.index import open_dir
 from login import Donor, NGO, load_user, RegisterForm, LoginForm, Subscription, get_ngo_by_id
 from search import index_campaigns
 from database import get_db_url, get_db_engine
-from campaigns import load_campaigns, load_campaigns_by_id, add_new_campaign, get_campaigns, augment_campaigns, Campaign
+from campaigns import load_campaign_by_id, load_campaigns_by_id, add_new_campaign, get_campaigns, augment_campaigns, Campaign
 from donations import count_donations_by_unique_id, total_donated_for_campaign, DonationForm
 from app_factory import app, db, engine
 from datetime import datetime
@@ -245,7 +245,7 @@ def ngo_dashboard():
     ngo = NGO.query.get(ngo_id)
     campaigns = Campaign.query.filter_by(NGO_ID=ngo.id).all()
 
-    return render_template('ngo-dashboard.html', user=ngo, campaigns=campaigns)
+    return render_template('ngo-dashboard.html', user=ngo, campaigns=campaigns, total_donated_for_campaign=total_donated_for_campaign)
 
 
 def send_notification_email(user_id, username, campaign_id, campaign_name):
@@ -383,6 +383,7 @@ def logout():
 @app.route('/donate/<int:campaign_id>', methods=['GET', 'POST'])
 @login_required
 def donate_to_campaign(campaign_id):
+    session.pop('_flashes', None)
     form = DonationForm()
 
     if form.validate_on_submit():
@@ -419,7 +420,7 @@ def donate_to_campaign(campaign_id):
         trans_id = getattr(tr, 'transId', None)
         msg_result = getattr(getattr(response, 'messages', None), 'resultCode', None)
 
-        ## for debugging
+        ### for debugging ###
         # print("Response Code:", rc)
         # print("Transaction ID:", trans_id)
         # print("Error full response:", response.__dict__)
@@ -448,8 +449,8 @@ def donate_to_campaign(campaign_id):
 
             print("Donation failed:", error_msg)
             flash(f"Payment failed: {error_msg}", "danger")
-
-    return render_template('donation-form.html', form=form, campaign_id=campaign_id)
+    campaign_name = load_campaign_by_id(campaign_id).Name
+    return render_template('donation-form.html', form=form, campaign_id=campaign_id, campaign_name=campaign_name)
 
 
 @app.route('/donation-success')
