@@ -1,0 +1,12 @@
+Flask
+Flask-WTF
+Flask-Login
+Flask-SQLAlchemy
+WTForms
+python-dotenv
+requests
+Werkzeug
+authorizenet
+Whoosh
+SQLAlchemy
+pymysql
