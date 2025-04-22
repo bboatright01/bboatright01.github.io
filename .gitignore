@@ -12,3 +12,4 @@ search_index\*
 search_index/*
 **/.idea/workspace.xml
 **/.idea/tasks.xml
+/search_index

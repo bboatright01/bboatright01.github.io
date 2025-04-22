@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log("Updating nav links for user type:", userType);
 
-        const donateLinks = Array.from(navLinks.querySelectorAll('a[href="donate.html"], a[href="/donate"]'));
+        const donateLinks = Array.from(navLinks.querySelectorAll('a[href="/donate"], a[href="/donate"]'));
         const createLinks = Array.from(navLinks.querySelectorAll('a[href="/create"]'));
 
         donateLinks.forEach(link => {
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const linkFixes = [
             { selector: 'a[href="search.html"]', newHref: '/search' },
             { selector: 'a[href="about.html"]', newHref: '/about' },
-            { selector: 'a[href="donate.html"]', newHref: '/donate' }
+            { selector: 'a[href="/donate"]', newHref: '/donate' }
         ];
 
         linkFixes.forEach(({ selector, newHref }) => {
