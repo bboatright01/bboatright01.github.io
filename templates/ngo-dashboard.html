@@ -109,13 +109,20 @@
             list-style-type: none;
             padding: 0;
         }
-        
-        .campaign-list li {
+
+        .campaign-item {
             padding: 15px;
             margin-bottom: 10px;
-            background-color: white;
+            background-color: #ffffff80;
             border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            font-size: 18px;
+            color: #333;
+        }
+
+        .campaign-item a {
+            text-decoration: none;
+            color: #007BFF;
         }
         
         .dashboard-section {
@@ -142,8 +149,8 @@
                 <h2>Your Campaigns</h2>
                 <ul class="campaign-list">
                     {% for campaign in campaigns %}
-                        <li>
-                            <strong><a href="{{ url_for('campaign', campaign_id=campaign['id']) }}">{{ campaign["Name"] }}</a></strong> – {{ campaign.status }}
+                        <li class="campaign-item">
+                            <strong><a href="{{ url_for('campaign', campaign_id=campaign['id']) }}">{{ campaign["Name"] }}</a></strong> {{ campaign.status }}
                         </li>
                     {% else %}
                         <li>No campaigns yet.</li>

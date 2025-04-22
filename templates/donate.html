@@ -9,6 +9,30 @@
 <body>
     {% include 'header.html' %}
 
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container p {
+            font-size: 1.2em;
+            line-height: 1.5;
+            max-width: 400px;
+        }
+        .campaign-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .campaign-list li {
+            margin-bottom: 10px;
+        }
+        .campaign-list a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+    </style>
+
     <div class="container">
         <h1>Donate</h1>
         {% if current_user.is_authenticated %}
@@ -19,7 +43,7 @@
         <ul class="campaign-list">
             {% for campaign in campaigns %}
                 <li>
-                    <strong><a href="{{ url_for('campaign', campaign_id=campaign['id']) }}">{{ campaign["Name"] }}</a></strong> – {{ campaign.status }}
+                    <strong><a href="{{ url_for('campaign', campaign_id=campaign['id']) }}">{{ campaign["Name"] }}</a></strong> {{ campaign.status }}
                 </li>
             {% else %}
                 <li>No campaigns yet.</li>
