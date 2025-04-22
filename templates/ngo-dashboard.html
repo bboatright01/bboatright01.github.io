@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donor Dashboard - Change 4 Change</title>
+    <title>NGO Dashboard - Change 4 Change</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/create.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
@@ -133,7 +133,6 @@
 <body>
 
     {% include 'header.html' %}
-
     <div class="container">
         <h1>Welcome, {{ user.name }}</h1>
         
@@ -150,7 +149,12 @@
                 <ul class="campaign-list">
                     {% for campaign in campaigns %}
                         <li class="campaign-item">
-                            <strong><a href="{{ url_for('campaign', campaign_id=campaign['id']) }}">{{ campaign["Name"] }}</a></strong> {{ campaign.status }}
+                            <strong>
+                                <a href="{{ url_for('campaign', campaign_id=campaign.id) }}">{{ campaign.Name }}</a>
+                                {% if total_donated_for_campaign(campaign.id) >= campaign.Funding_Goal %}
+                                 - Funding Goal Met!
+                                {% endif %}
+                            </strong>
                         </li>
                     {% else %}
                         <li>No campaigns yet.</li>

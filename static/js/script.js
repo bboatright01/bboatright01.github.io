@@ -62,11 +62,11 @@ document.addEventListener('DOMContentLoaded', function() {
             let maxGap = 80; // Default max gap
             
             if (screenWidth >= 2000) {
-                maxGap = 200; // Adds a much larger gaps for very wide screens
+                maxGap = 200;
             } else if (screenWidth >= 1600) {
-                maxGap = 150; // Adds a much larger gaps for very wide screens
+                maxGap = 150;
             } else if (screenWidth >= 1200) {
-                maxGap = 100; // Adds a much medium gaps for very wide screens
+                maxGap = 100;
             }
             
             const finalGap = Math.min(optimalGap, maxGap);
