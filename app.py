@@ -253,7 +253,7 @@ def send_notification_email(user_id, username, campaign_id, campaign_name):
     
     # Mailtrap Sandbox API endpoint and bearer token
     url = "https://sandbox.api.mailtrap.io/api/send/3630609"
-    bearer_token = "e943c36f37910e9933bd7aea9785d3e1"
+    bearer_token = os.getenv("MAILTRAP_SB_BEARER_TOKEN");
     
     # Prepare the email payload
     payload = {
@@ -289,7 +289,7 @@ def send_notification_email(user_id, username, campaign_id, campaign_name):
         print(f"Headers: {headers}")
         print(f"Payload: {json.dumps(payload)}")
         
-        response = requests.post(url, headers=headers, data=json.dumps(payload))
+        response = requests.post(url, headers=headers, data=json.dumps(payload), timeout=10)
         
         print(f"Response status code: {response.status_code}")
         print(f"Response body: {response.text}")
@@ -460,4 +460,4 @@ def donation_success():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
