@@ -253,7 +253,7 @@ def send_notification_email(user_id, username, campaign_id, campaign_name):
     
     # Mailtrap Sandbox API endpoint and bearer token
     url = "https://sandbox.api.mailtrap.io/api/send/3630609"
-    bearer_token = os.getenv("MAILTRAP_SB_BEARER_TOKEN");
+    bearer_token = os.getenv("MAILTRAP_SB_BEARER_TOKEN")
     
     # Prepare the email payload
     payload = {
