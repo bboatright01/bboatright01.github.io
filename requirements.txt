@@ -10,3 +10,4 @@ authorizenet
 Whoosh
 SQLAlchemy
 pymysql
+email-validator
